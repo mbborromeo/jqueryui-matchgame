@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Occupational Health and Safety - Drag & Drop Match Game</title>
+	<link href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+
+	<style>
+    #drop-zone {
+			position: absolute;			
+		}
+		#drop-zone > div {
+			border: 1px solid black;
+			height: 100px;
+			width: 100px;
+			margin: 20px;
+			text-align: center;
+			padding-top: 40px;
+			box-sizing: border-box;
+			line-height: 10px;
+		}
+		#answers {
+			position: absolute;
+      left: 200px;
+		}
+		.ui-draggable {
+			width: 100px;
+			height: 100px;
+			margin: 20px;
+			cursor: move;
+			border: 1px solid black;
+			box-sizing: border-box;
+		}		
+	</style>
+</head>
+<body>
+
+<div id="drop-zone"></div>
+<div id="answers"></div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+<script>
+  /**
+   * Reference: Chapter 5 of "jQuery UI in Action" book written by T. J. Vantoll, published by Manning:
+   * https://github.com/tjvantoll/jquery-ui-in-action-demos/blob/master/chapter-05/05-color-match-game.html
+   */
+
+	function randomize( array ) {
+		return array.sort(function() {
+			return 0.5 - Math.random();
+		});
+	};
+
+	const	answers = [
+    "red", 
+    "blue", 
+    "green", 
+    "yellow", 
+    "purple", 
+    "black"
+  ];
+
+  // drop zone	
+  /*
+  randomize( answers );
+  for ( let j = 0; j < answers.length; j++ ) {
+		$( "<div>", { text: answers[ j ] })
+			.appendTo( "#drop-zone" );
+	}
+  */
+  let questions = [...answers];
+  randomize( questions );
+  let question = questions.pop();
+
+  $( "<div>", { text: question })
+			.appendTo( "#drop-zone" );
+
+  $( "#drop-zone > div" ).droppable({
+		accept: function( draggable ) {
+			return $( this ).text() == draggable.attr( "id" );
+		},
+		drop: function( event, ui ) {
+			var color = ui.draggable.css( "background-color" );
+			$( this ).css( "background", color ).addClass( "filled" );
+			ui.draggable.hide( "fade" );
+			
+			if ( $( ".filled" ).length === answers.length ) {
+				$( "<div><p>Nice job! Refreshing game.</p></div>")
+					.dialog({ modal: true });
+				setTimeout(function() {
+					window.location = window.location;
+				}, 3000 );
+			}
+		}
+	});
+
+  // draggable items
+	for ( let i = 0; i < answers.length; i++ ) {
+		$( "<div>", { id: answers[ i ] } )
+			.css( "background", answers[ i ] )
+			.appendTo( "#answers" )
+			.draggable({ 
+        revert: "invalid", 
+        zIndex: 2 
+      });
+	}	
+</script>
+
+</body>
+</html>
