@@ -13,12 +13,6 @@ body {
   align-items: stretch;
 }
 
-/* 
-#drop-zone, #question {
-  display: inline-block;
-}
-*/
-
 #question-area, 
 #answers {
   padding: 10px;
@@ -33,7 +27,6 @@ body {
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  /* width: 70%; */
   flex: 0 1 70%;
   order: 2;
 }
@@ -64,12 +57,12 @@ body {
 }
 
 #answers {
-  /*
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
-  */
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
 }
 
 #answers > div, 
@@ -81,12 +74,9 @@ body {
 }
 
 #answers > div {
-  display: inline-block;
-  padding: 0;
+  flex: 0 1 23%;
   margin-right: 1%;
   margin-top: 5%;
-  width: 23%;
-  vertical-align: top;
 }
 
 #question-area > div#drop-zone {
