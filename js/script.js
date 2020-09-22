@@ -135,8 +135,8 @@ const	answers = [
  * Reference: Chapter 5 of "jQuery UI in Action" book written by T. J. Vantoll, published by Manning:
  * https://github.com/tjvantoll/jquery-ui-in-action-demos/blob/master/chapter-05/05-color-match-game.html
  */
-function randomize( array ) {
-  return array.sort(function() {
+function randomize( array ){
+  return array.sort( function(){
     return 0.5 - Math.random();
   });
 };
@@ -190,24 +190,13 @@ $questionDiv.append( $column2 );
 $questionArea.append( $questionDiv );
 
 // define drop zone corresponding to question
-/*
-  <div id="drop-zone"><!-- ui-droppable -->
-    <h3>Team member?</h3>
-    <!-- placeholder image -->
-    <div>
-      <img src="./images/0_placeholder.png" />
-    </div>
-  </div>
-*/
 const $dropZone = $("#drop-zone");
 $dropZone.data( 'id', question.id );
 $dropZone.droppable({
-  accept: function( draggable ) {
+  accept: function( draggable ){
     return $( this ).data( 'id' ) == draggable.data( 'id' );
   },
-  drop: function( event, ui ) {
-    // var color = ui.draggable.css( "background-color" );
-    // $( this ).css( "background", color ).addClass( "filled" );
+  drop: function( event, ui ){
     $( this ).addClass( "filled" );
     let member = ui.draggable.data( 'member' );
     let image = ui.draggable.data( 'image' );
@@ -251,9 +240,8 @@ $dropZone.droppable({
   }
 });
 
-
 // draggable items/answers
-for ( let i = 0; i < answers.length; i++ ) {
+for( let i = 0; i < answers.length; i++ ){
   let $answer = $("<div></div>");
   $answer.data( 'id', answers[ i ].id );
   $answer.data( 'member', answers[ i ].teamMember );
