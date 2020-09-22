@@ -1,3 +1,4 @@
+// JSON data
 const	answers = [
   {
     id: 1,
@@ -141,18 +142,18 @@ function randomize( array ){
   });
 };
 
-// executes right after the HTML document is loaded property and the DOM is ready
-$(document).ready( function() {
+function generateQuestion(){
   // generate a random question	
   let questions = [...answers];
   randomize( questions );
   let question = questions.pop();
 
-  // get question from JSON object
+  // get question data from JSON object
   const $questionArea = $("#question-area");
   let $questionDiv = $("<div></div>");
   $questionDiv.attr('id', 'question');
 
+  // build column 1 of question
   let $column1 = $("<div></div>");
   $column1.addClass('column');
   let $column1heading = $("<h2></h2>");
@@ -171,6 +172,7 @@ $(document).ready( function() {
   }
   $questionDiv.append( $column1 );
 
+  // build column 2 of question
   let $column2 = $("<div></div>");
   $column2.addClass('column');
   let $column2heading = $("<h2></h2>");
@@ -189,6 +191,7 @@ $(document).ready( function() {
   }
   $questionDiv.append( $column2 );
 
+  // append generated question to question area
   $questionArea.append( $questionDiv );
 
   // define drop zone corresponding to question
@@ -202,8 +205,6 @@ $(document).ready( function() {
       $( this ).addClass( "filled" );
       let member = ui.draggable.data( 'member' );
       let image = ui.draggable.data( 'image' );
-      console.log('DROP member', member)
-      console.log('DROP image', image)
       $( this ).find("#member").text( member );
       $( this ).find("#image img").attr( 'src', image );
       ui.draggable.hide( "fade" );
@@ -241,18 +242,42 @@ $(document).ready( function() {
       */
     }
   });
+}
 
-  // draggable items/answers
+/**
+ * Check window width to determine if should use drag 'n' drop functionality for Desktop view, 
+ * or click selection for Mobile/Tablet view < 768px.
+ */
+function enableDesktopOrMobileAnswers(){
+  if( $(window).width() < 768 ){
+    // hide draggable answers
+    $("#answers").css( {'display':'none'} );
+
+    // show clickable answers
+    $("#answers-mobile").css( {'display':'block'} );
+  } else {
+    // hide clickable answers
+    $("#answers-mobile").css( {'display':'none'} );
+
+    // show draggable answers
+    $("#answers").css( {'display':'flex'} );
+  }
+}
+
+function generateDesktopAnswers(){
   for( let i = 0; i < answers.length; i++ ){
     let $answer = $("<div></div>");
     $answer.data( 'id', answers[ i ].id );
     $answer.data( 'member', answers[ i ].teamMember );
     $answer.data( 'image', answers[ i ].image );
+
     let $heading = $("<h3></h3>");
-    $heading.text( answers[ i ].teamMember );  
+    $heading.text( answers[ i ].teamMember );
+
     let $imgWrapper = $("<div></div>");
     let $img = $("<img />");
     $img.attr('src', answers[ i ].image );
+
     $imgWrapper.append( $img );
     $answer.append( $heading );
     $answer.append( $imgWrapper );
@@ -262,4 +287,28 @@ $(document).ready( function() {
         zIndex: 2
       });
   }
+}
+
+function generateMobileTabletAnswers(){
+  console.log('generating Clickable answers...')
+}
+
+// Executes right after the HTML document is loaded property and the DOM is ready
+$(document).ready( function() {
+  generateQuestion();
+
+  // generate both draggable and clickable answers once
+  generateDesktopAnswers();
+  generateMobileTabletAnswers();
+  
+  // initial screen width check to determine whether to show draggable or clickable answers
+  enableDesktopOrMobileAnswers(); 
+
+  /**
+   * Event handlers
+   */
+  // if screen has resized, check screen width again
+  $(window).on('resize', () => {
+    enableDesktopOrMobileAnswers();
+  });
 });
