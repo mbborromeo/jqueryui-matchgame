@@ -34,7 +34,8 @@ body {
 }
 
 #question h2 {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 20px;
   font-weight: 600;
   font-size: 16px;
   line-height: 19px;
@@ -58,7 +59,8 @@ body {
 }
 
 #question ul {
-  margin-bottom: 0;
+  margin: 0;
+  padding-left: 17px;
 }
 
 #question ul li {
