@@ -22,13 +22,12 @@ body {
   border: 3px solid #004E73;
   background-color: #D1DBE3;
   border-radius: 12px 12px 0 12px;
-  padding: 14px 16px;
+  padding: 16px;
   color: #004E73;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   flex: 0 1 70%;
-  order: 2;
 }
 
 #question h2 {
@@ -50,6 +49,10 @@ body {
   padding-left: 0;
   padding-right: 16px;
   width: 35%;
+}
+
+#question ul {
+  margin-bottom: 0;
 }
 
 #question ul li {
@@ -76,12 +79,11 @@ body {
 #answers > div {
   flex: 0 1 23%;
   margin-right: 1%;
-  margin-top: 5%;
+  margin-top: 4%;
 }
 
 #question-area > div#drop-zone {
   flex: 0 1 23%;
-  order: 1;
 }
 
 #answers > div h3, 
@@ -121,4 +123,34 @@ body {
 
 .ui-droppable {
   border: 1px dotted green;
+}
+
+/* Media Queries for mobile-view */
+@media only screen and (max-width: 767px) {
+  #question-area {
+    display: block;
+  }
+  
+  #question-area > div#drop-zone {
+    margin-bottom: 14px;
+  }
+
+  #question .column {
+    width: auto;
+    padding-left: 0;
+  }
+
+  #question .column:first-child {
+    width: auto;
+    border-right: none;
+    margin-bottom: 16px;
+  }
+
+  #answers {
+    display: block;
+  }
+
+  #answers > div {
+    margin-top: 10%;
+  }
 }
