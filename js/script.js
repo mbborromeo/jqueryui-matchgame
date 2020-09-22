@@ -251,16 +251,16 @@ function generateQuestion(){
 function enableDesktopOrMobileAnswers(){
   if( $(window).width() < 768 ){
     // hide draggable answers
-    $("#answers").css( {'display':'none'} );
+    $("#answers").addClass( 'hidden' );
 
     // show clickable answers
-    $("#answers-mobile").css( {'display':'block'} );
+    $("#answers-mobile").removeClass( 'hidden' );
   } else {
     // hide clickable answers
-    $("#answers-mobile").css( {'display':'none'} );
+    $("#answers-mobile").addClass( 'hidden' );
 
     // show draggable answers
-    $("#answers").css( {'display':'flex'} );
+    $("#answers").removeClass( 'hidden' );
   }
 }
 
@@ -281,16 +281,58 @@ function generateDesktopAnswers(){
     $imgWrapper.append( $img );
     $answer.append( $heading );
     $answer.append( $imgWrapper );
-    $answer.appendTo( "#answers" )
-      .draggable({ 
-        revert: "invalid", 
-        zIndex: 2
-      });
+
+    // add droppable functionality
+    $answer.draggable({ 
+      revert: "invalid", 
+      zIndex: 2
+    });
+
+    $answer.appendTo( "#answers" );
   }
 }
 
 function generateMobileTabletAnswers(){
   console.log('generating Clickable answers...')
+
+  for( let i = 0; i < answers.length; i++ ){
+    let $answer = $("<div></div>");
+    $answer.data( 'id', answers[ i ].id );
+    $answer.data( 'member', answers[ i ].teamMember );
+    $answer.data( 'image', answers[ i ].image );
+
+    let $heading = $("<h3></h3>");
+    $heading.text( answers[ i ].teamMember );
+
+    let $imgWrapper = $("<div></div>");
+    let $img = $("<img />");
+    $img.attr('src', answers[ i ].image );
+
+    $imgWrapper.append( $img );
+    $answer.append( $heading );
+    $answer.append( $imgWrapper );
+
+    // add click handler
+    $answer.on('click', function(ev){
+      //console.log('ev.dataset', ev.dataset )
+      //console.log('ev.target.id', ev.target.id ) -> Doesn't work
+      //console.log('ev.currentTarget.id', ev.currentTarget.id )
+      console.log('Drop zone ID is', $("#drop-zone").data( 'id' ) )      
+
+      // logic to check if correct selection has been made
+      if( $( this ).data( 'id' ) == $("#drop-zone").data( 'id' ) ){
+        console.log("You are correct!  Try next question.")
+      }
+
+      // let user submit selection
+
+      // feedback to user: 
+      // if correct - dialog well done. try next question. hide/remove correct answer from choices.
+      // else if incorrect - dialog choose another answer. 
+    });
+
+    $answer.appendTo( "#answers-mobile" );
+  }
 }
 
 // Executes right after the HTML document is loaded property and the DOM is ready

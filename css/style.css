@@ -14,7 +14,8 @@ body {
 }
 
 #question-area, 
-#answers {
+#answers,
+#answers-mobile {
   padding: 10px;
 }
 
@@ -72,7 +73,12 @@ body {
   align-content: flex-start;
 }
 
+#answers-mobile {
+  display: block;
+}
+
 #answers > div, 
+#answers-mobile > div,
 #question-area > div#drop-zone {
   background-color: white;
   border: 3px solid #004E73;
@@ -82,8 +88,16 @@ body {
 
 #answers > div {
   flex: 0 1 23%;
+}
+
+#answers > div {
   margin-right: 1%;
   margin-top: 4%;
+}
+
+#answers-mobile > div {
+  margin-right: 0;
+  margin-top: 10%;
 }
 
 #question-area > div#drop-zone {
@@ -91,6 +105,7 @@ body {
 }
 
 #answers > div h3, 
+#answers-mobile > div h3,
 #question-area > div#drop-zone h3 {
   display: block;
   height: 38px;
@@ -106,11 +121,13 @@ body {
 }
 
 #answers > div > div, 
+#answers-mobile > div > div,
 #question-area > div#drop-zone > div {
   padding: 20px 16px;
 }
 
 #answers > div > div img, 
+#answers-mobile > div > div img,
 #question-area > div#drop-zone > div img {
   width: 100%;
   height: auto;
@@ -122,6 +139,11 @@ body {
 
 .ui-droppable {
   border: 1px dotted green;
+}
+
+#answers.hidden,
+#answers-mobile.hidden {
+  display: none;
 }
 
 /* Media Queries for mobile-view */
@@ -148,13 +170,5 @@ body {
     border-right: none;
     margin-bottom: 16px;
     margin-right: 0;
-  }
-
-  #answers {
-    display: block;
-  }
-
-  #answers > div {
-    margin-top: 10%;
   }
 }
