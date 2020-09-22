@@ -1,0 +1,123 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+}
+
+#question-area {
+  background-color: #6994AB;
+  border-radius: 12px 12px 0 12px;  
+}
+
+#question-area, 
+#answers {
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#question {
+  border: 3px solid #004E73;
+  background-color: #D1DBE3;
+  border-radius: 12px 12px 0 12px;
+  padding: 14px 16px;
+  color: #004E73;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  width: 70%;
+}
+
+#question h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+#question .column {  
+  display: inline-block;
+  padding-left: 16px;
+  vertical-align: top;
+}
+
+#question .column:first-child {
+  border-right: 1px solid #004E73;
+  padding-left: 0;
+  padding-right: 16px;
+  width: 35%;
+}
+
+#question ul li {
+  padding-bottom: 14px;
+}
+
+#drop-zone, #question {
+  display: inline-block;
+}
+
+#answers {
+  border: 1px dashed red;
+  /*
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  */
+}
+
+#answers > div, 
+#question-area > div#drop-zone {
+  background-color: white;
+  border: 3px solid #004E73;
+  border-radius: 8px;
+  display: inline-block;
+  padding: 0;
+  margin-right: 1%;
+  margin-bottom: 2%;
+  width: 23%;
+  vertical-align: top;
+  min-height: 290px;
+  /* 
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: 24%;
+  */
+}
+
+#answers > div h3, 
+#question-area > div#drop-zone h3 {
+  display: block;
+  height: 38px;
+  border-radius: 4px;
+  padding: 16px 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19px;
+  text-align: center;
+  background-color: #004E73;
+  color: white;
+}
+
+#answers > div > div, 
+#question-area > div#drop-zone > div {
+  padding: 20px 16px;
+}
+
+#answers > div > div img, 
+#question-area > div#drop-zone > div img {
+  width: 100%;
+  height: auto;
+}
+
+.ui-draggable {
+  width: 100px;
+  height: 100px;
+  margin: 20px;
+  cursor: move;
+  border: 1px solid black;
+  box-sizing: border-box;
+}
+
+.ui-droppable {
+  border: 1px dotted green;
+}

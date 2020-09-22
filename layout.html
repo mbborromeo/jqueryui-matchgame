@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Occupational Health and Safety - Drag & Drop Match Game</title>
+  <link href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="./css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+<div id="question-area">
+  <div id="drop-zone"><!-- ui-droppable -->
+    <h3>Team member?</h3>
+    <!-- placeholder image -->
+    <div>
+      <img src="./images/0_placeholder.png" />
+    </div>
+  </div>
+  <div id="question">
+    <div class="column">
+      <h2>Priorities</h2>
+      <ul>
+        <li>Recovery</li>
+        <li>Pain/symptom management</li>
+        <li>Ensuring benefits received/paid</li>
+        <li>Ensuring claim continues </li>
+        <li>Communication with all parties: family, doctor, employer, insurer</li>
+      </ul>
+    </div>
+    <div class="column">
+      <h2>Concerns and Challenges</h2>
+      <ul>
+        <li>Fear of re-injury</li>
+        <li>Being pushed to return to work before feeling ready</li>
+        <li>Uncertainty with what is happening at work while away</li>
+        <li>Concern with what employer and co-workers think</li>
+        <li>Claim eligibility and continuing to prove need for benefits</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="answers">
+  <div><!-- ui-draggable -->
+    <h3>Direct supervisor</h3>
+    <div>
+      <img src="./images/1_direct_supervisor.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Co-worker</h3>
+    <div>
+      <img src="./images/2_coworker.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Injured/ill worker</h3>
+    <div>
+      <img src="./images/3_injured_ill_coworker.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Physician</h3>
+    <div>
+      <img src="./images/4_physician.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Union representative</h3>
+    <div>
+      <img src="./images/5_union_rep.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Insurance provider</h3>
+    <div>
+      <img src="./images/6_insurance_provider.png" />
+    </div>
+  </div>
+
+  <div><!-- ui-draggable -->
+    <h3>Disability case management professional</h3>
+    <div>
+      <img src="./images/7_disability_case_mgmt_pro.png" />
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+
+<script>
+  /**
+   * Reference: Chapter 5 of "jQuery UI in Action" book written by T. J. Vantoll, published by Manning:
+   * https://github.com/tjvantoll/jquery-ui-in-action-demos/blob/master/chapter-05/05-color-match-game.html
+   */
+
+</script>
+
+</body>
+</html>
