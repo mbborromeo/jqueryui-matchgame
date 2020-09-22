@@ -5,8 +5,19 @@ body {
 
 #question-area {
   background-color: #6994AB;
-  border-radius: 12px 12px 0 12px;  
+  border-radius: 12px 12px 0 12px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
 }
+
+/* 
+#drop-zone, #question {
+  display: inline-block;
+}
+*/
 
 #question-area, 
 #answers {
@@ -22,7 +33,9 @@ body {
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
-  width: 70%;
+  /* width: 70%; */
+  flex: 0 1 70%;
+  order: 2;
 }
 
 #question h2 {
@@ -50,10 +63,6 @@ body {
   padding-bottom: 14px;
 }
 
-#drop-zone, #question {
-  display: inline-block;
-}
-
 #answers {
   /*
   display: flex;
@@ -67,23 +76,22 @@ body {
 #question-area > div#drop-zone {
   background-color: white;
   border: 3px solid #004E73;
-  border-radius: 8px;
+  border-radius: 8px;  
+  min-height: 290px;  
+}
+
+#answers > div {
   display: inline-block;
   padding: 0;
   margin-right: 1%;
   margin-top: 5%;
   width: 23%;
   vertical-align: top;
-  min-height: 290px;
-  /* 
-  flex-grow: 0;
-  flex-shrink: 1;
-  flex-basis: 24%;
-  */
 }
 
 #question-area > div#drop-zone {
-  margin-top: 0;
+  flex: 0 1 23%;
+  order: 1;
 }
 
 #answers > div h3, 
