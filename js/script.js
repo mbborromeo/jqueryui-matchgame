@@ -141,122 +141,125 @@ function randomize( array ){
   });
 };
 
-// generate a random question	
-let questions = [...answers];
-randomize( questions );
-let question = questions.pop();
+// executes right after the HTML document is loaded property and the DOM is ready
+$(document).ready( function() {
+  // generate a random question	
+  let questions = [...answers];
+  randomize( questions );
+  let question = questions.pop();
 
-// get question from JSON object
-const $questionArea = $("#question-area");
-let $questionDiv = $("<div></div>");
-$questionDiv.attr('id', 'question');
+  // get question from JSON object
+  const $questionArea = $("#question-area");
+  let $questionDiv = $("<div></div>");
+  $questionDiv.attr('id', 'question');
 
-let $column1 = $("<div></div>");
-$column1.addClass('column');
-let $column1heading = $("<h2></h2>");
-$column1heading.text("Priorities");
-$column1.append( $column1heading );
-if( question.priorities.length > 0 ){
-  let $column1list = $("<ul></ul>");
+  let $column1 = $("<div></div>");
+  $column1.addClass('column');
+  let $column1heading = $("<h2></h2>");
+  $column1heading.text("Priorities");
+  $column1.append( $column1heading );
+  if( question.priorities.length > 0 ){
+    let $column1list = $("<ul></ul>");
 
-  for( let i=0; i < question.priorities.length; i++ ){
-    let $listItem = $("<li></li>");
-    $listItem.text( question.priorities[i] );
-    $column1list.append( $listItem );
-  }
-  
-  $column1.append( $column1list );
-}
-$questionDiv.append( $column1 );
-
-let $column2 = $("<div></div>");
-$column2.addClass('column');
-let $column2heading = $("<h2></h2>");
-$column2heading.text("Concerns and Challenges");
-$column2.append( $column2heading );
-if( question.concernsAndChallenges.length > 0 ){
-  let $column2list = $("<ul></ul>");
-
-  for( let j=0; j < question.concernsAndChallenges.length; j++ ){
-    let $listItem = $("<li></li>");
-    $listItem.text( question.concernsAndChallenges[j] );
-    $column2list.append( $listItem );
-  }
-  
-  $column2.append( $column2list );
-}
-$questionDiv.append( $column2 );
-
-$questionArea.append( $questionDiv );
-
-// define drop zone corresponding to question
-const $dropZone = $("#drop-zone");
-$dropZone.data( 'id', question.id );
-$dropZone.droppable({
-  accept: function( draggable ){
-    return $( this ).data( 'id' ) == draggable.data( 'id' );
-  },
-  drop: function( event, ui ){
-    $( this ).addClass( "filled" );
-    let member = ui.draggable.data( 'member' );
-    let image = ui.draggable.data( 'image' );
-    console.log('DROP member', member)
-    console.log('DROP image', image)
-    $( this ).find("#member").text( member );
-    $( this ).find("#image img").attr( 'src', image );
-    ui.draggable.hide( "fade" );
-    
-    /*
-    if ( $( ".filled" ).length === answers.length ) {
-      $( "<div><p>Nice job! Refreshing game.</p></div>")
-        .dialog({ modal: true });
-
-      setTimeout(function() {
-        window.location = window.location; // refresh page to re-start game
-      }, 3000 );
+    for( let i=0; i < question.priorities.length; i++ ){
+      let $listItem = $("<li></li>");
+      $listItem.text( question.priorities[i] );
+      $column1list.append( $listItem );
     }
-    */
+    
+    $column1.append( $column1list );
+  }
+  $questionDiv.append( $column1 );
 
-    /*
-    if ( $(".filled").length === 1 ) {
-      $("<div><p>Nice job! Try the next question.</p></div>")
-        .dialog({ modal: true });
+  let $column2 = $("<div></div>");
+  $column2.addClass('column');
+  let $column2heading = $("<h2></h2>");
+  $column2heading.text("Concerns and Challenges");
+  $column2.append( $column2heading );
+  if( question.concernsAndChallenges.length > 0 ){
+    let $column2list = $("<ul></ul>");
 
-      // reset drop zone
-      $("#drop-zone #member").text( 'Team member?' );
-      $("#drop-zone #image img").attr( 'src', './images/0_placeholder.png' );
+    for( let j=0; j < question.concernsAndChallenges.length; j++ ){
+      let $listItem = $("<li></li>");
+      $listItem.text( question.concernsAndChallenges[j] );
+      $column2list.append( $listItem );
+    }
+    
+    $column2.append( $column2list );
+  }
+  $questionDiv.append( $column2 );
 
-      // ask next question in the drop zone
-      question = questions.pop();
-      if( question ){
-        $( "<div>", { text: question })
-        .appendTo( "#drop-zone" );
-      } else {
-        $( "<div><p>Well done! You've answered all questions correctly!</p></div>")
-        .dialog({ modal: true });
+  $questionArea.append( $questionDiv );
+
+  // define drop zone corresponding to question
+  const $dropZone = $("#drop-zone");
+  $dropZone.data( 'id', question.id );
+  $dropZone.droppable({
+    accept: function( draggable ){
+      return $( this ).data( 'id' ) == draggable.data( 'id' );
+    },
+    drop: function( event, ui ){
+      $( this ).addClass( "filled" );
+      let member = ui.draggable.data( 'member' );
+      let image = ui.draggable.data( 'image' );
+      console.log('DROP member', member)
+      console.log('DROP image', image)
+      $( this ).find("#member").text( member );
+      $( this ).find("#image img").attr( 'src', image );
+      ui.draggable.hide( "fade" );
+      
+      /*
+      if ( $( ".filled" ).length === answers.length ) {
+        $( "<div><p>Nice job! Refreshing game.</p></div>")
+          .dialog({ modal: true });
+
+        setTimeout(function() {
+          window.location = window.location; // refresh page to re-start game
+        }, 3000 );
       }
-    }    
-    */
+      */
+
+      /*
+      if ( $(".filled").length === 1 ) {
+        $("<div><p>Nice job! Try the next question.</p></div>")
+          .dialog({ modal: true });
+
+        // reset drop zone
+        $("#drop-zone #member").text( 'Team member?' );
+        $("#drop-zone #image img").attr( 'src', './images/0_placeholder.png' );
+
+        // ask next question in the drop zone
+        question = questions.pop();
+        if( question ){
+          $( "<div>", { text: question })
+          .appendTo( "#drop-zone" );
+        } else {
+          $( "<div><p>Well done! You've answered all questions correctly!</p></div>")
+          .dialog({ modal: true });
+        }
+      }    
+      */
+    }
+  });
+
+  // draggable items/answers
+  for( let i = 0; i < answers.length; i++ ){
+    let $answer = $("<div></div>");
+    $answer.data( 'id', answers[ i ].id );
+    $answer.data( 'member', answers[ i ].teamMember );
+    $answer.data( 'image', answers[ i ].image );
+    let $heading = $("<h3></h3>");
+    $heading.text( answers[ i ].teamMember );  
+    let $imgWrapper = $("<div></div>");
+    let $img = $("<img />");
+    $img.attr('src', answers[ i ].image );
+    $imgWrapper.append( $img );
+    $answer.append( $heading );
+    $answer.append( $imgWrapper );
+    $answer.appendTo( "#answers" )
+      .draggable({ 
+        revert: "invalid", 
+        zIndex: 2
+      });
   }
 });
-
-// draggable items/answers
-for( let i = 0; i < answers.length; i++ ){
-  let $answer = $("<div></div>");
-  $answer.data( 'id', answers[ i ].id );
-  $answer.data( 'member', answers[ i ].teamMember );
-  $answer.data( 'image', answers[ i ].image );
-  let $heading = $("<h3></h3>");
-  $heading.text( answers[ i ].teamMember );  
-  let $imgWrapper = $("<div></div>");
-  let $img = $("<img />");
-  $img.attr('src', answers[ i ].image );
-  $imgWrapper.append( $img );
-  $answer.append( $heading );
-  $answer.append( $imgWrapper );
-  $answer.appendTo( "#answers" )
-    .draggable({ 
-      revert: "invalid", 
-      zIndex: 2
-    });
-}	 
