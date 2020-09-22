@@ -113,12 +113,10 @@ body {
 }
 
 .ui-draggable {
-  width: 100px;
-  height: 100px;
-  margin: 20px;
   cursor: move;
-  border: 1px solid black;
+  /* 
   box-sizing: border-box;
+  */
 }
 
 .ui-droppable {
