@@ -251,16 +251,16 @@ function generateQuestion(){
 function enableDesktopOrMobileAnswers(){
   if( $(window).width() < 768 ){
     // hide draggable answers
-    $("#answers").css( {'display':'none'} );
+    $("#answers").addClass( 'hidden' );
 
     // show clickable answers
-    $("#answers-mobile").css( {'display':'block'} );
+    $("#answers-mobile").removeClass( 'hidden' );
   } else {
     // hide clickable answers
-    $("#answers-mobile").css( {'display':'none'} );
+    $("#answers-mobile").addClass( 'hidden' );
 
     // show draggable answers
-    $("#answers").css( {'display':'flex'} );
+    $("#answers").removeClass( 'hidden' );
   }
 }
 
