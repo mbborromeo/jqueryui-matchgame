@@ -281,11 +281,14 @@ function generateDesktopAnswers(){
     $imgWrapper.append( $img );
     $answer.append( $heading );
     $answer.append( $imgWrapper );
-    $answer.appendTo( "#answers" )
-      .draggable({ 
-        revert: "invalid", 
-        zIndex: 2
-      });
+
+    // add droppable functionality
+    $answer.draggable({ 
+      revert: "invalid", 
+      zIndex: 2
+    });
+
+    $answer.appendTo( "#answers" );
   }
 }
 
