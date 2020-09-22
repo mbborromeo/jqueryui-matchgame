@@ -28,6 +28,9 @@ body {
   font-size: 14px;
   line-height: 17px;
   flex: 0 1 70%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
 }
 
 #question h2 {
@@ -37,18 +40,21 @@ body {
   line-height: 19px;
 }
 
-#question .column {  
-  display: inline-block;
-  padding-left: 16px;
+#question .column {
+  padding-right: 16px;
   vertical-align: top;
-  width: 55%;
+  flex: 0 1 55%;
 }
 
 #question .column:first-child {
   border-right: 1px solid #004E73;
   padding-left: 0;
+  margin-right: 16px;
+  /*
   padding-right: 16px;
   width: 35%;
+  */
+  flex: 0 1 35%;
 }
 
 #question ul {
@@ -133,6 +139,10 @@ body {
     margin-bottom: 14px;
   }
 
+  #question {
+    display: block;
+  }
+
   #question .column {
     width: auto;
     padding-left: 0;
@@ -142,6 +152,7 @@ body {
     width: auto;
     border-right: none;
     margin-bottom: 16px;
+    margin-right: 0;
   }
 
   #answers {
