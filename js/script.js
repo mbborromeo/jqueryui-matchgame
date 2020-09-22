@@ -293,8 +293,6 @@ function generateDesktopAnswers(){
 }
 
 function generateMobileTabletAnswers(){
-  console.log('generating Clickable answers...')
-
   for( let i = 0; i < answers.length; i++ ){
     let $answer = $("<div></div>");
     $answer.data( 'id', answers[ i ].id );
@@ -314,11 +312,6 @@ function generateMobileTabletAnswers(){
 
     // add click handler
     $answer.on('click', function(ev){
-      //console.log('ev.dataset', ev.dataset )
-      //console.log('ev.target.id', ev.target.id ) -> Doesn't work
-      //console.log('ev.currentTarget.id', ev.currentTarget.id )
-      console.log('Drop zone ID is', $("#drop-zone").data( 'id' ) )      
-
       // logic to check if correct selection has been made
       if( $( this ).data( 'id' ) == $("#drop-zone").data( 'id' ) ){
         console.log("You are correct!  Try next question.")
