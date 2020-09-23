@@ -194,20 +194,28 @@ function generateQuestion(){
   // append generated question to question area
   $questionArea.append( $questionDiv );
 
-  // define drop zone corresponding to question
+  // define drop zone corresponding to question on Desktop view
   const $dropZone = $("#drop-zone");
   $dropZone.data( 'id', question.id );
   $dropZone.droppable({
     accept: function( draggable ){
-      return $( this ).data( 'id' ) == draggable.data( 'id' );
+      return draggable.attr( 'id' ) == $( this ).data( 'id' );
     },
     drop: function( event, ui ){
       $( this ).addClass( "filled" );
-      let member = ui.draggable.data( 'member' );
-      let image = ui.draggable.data( 'image' );
-      $( this ).find("#member").text( member );
-      $( this ).find("#image img").attr( 'src', image );
-      ui.draggable.hide( "fade" );
+      let $member = ui.draggable.data( 'member' );
+      let $image = ui.draggable.data( 'image' );
+      $( this ).find("#member").text( $member );
+      $( this ).find("#image img").attr( 'src', $image );
+
+      // hide correct answer selected on Desktop view
+      ui.draggable.hide( "fade", function(){
+        $(this).remove();
+      });
+
+      // hide corresponding answer on Mobile view as well
+      let $correctAnswerOnMobile = $("#answers-mobile").children( "#" + ui.draggable.attr('id') );
+      $correctAnswerOnMobile.remove();
       
       /*
       if ( $( ".filled" ).length === answers.length ) {
@@ -267,7 +275,7 @@ function enableDesktopOrMobileAnswers(){
 function generateDesktopAnswers(){
   for( let i = 0; i < answers.length; i++ ){
     let $answer = $("<div></div>");
-    $answer.data( 'id', answers[ i ].id );
+    $answer.attr( 'id', answers[ i ].id );
     $answer.data( 'member', answers[ i ].teamMember );
     $answer.data( 'image', answers[ i ].image );
 
@@ -295,7 +303,7 @@ function generateDesktopAnswers(){
 function generateMobileTabletAnswers(){
   for( let i = 0; i < answers.length; i++ ){
     let $answer = $("<div></div>");
-    $answer.data( 'id', answers[ i ].id );
+    $answer.attr( 'id', answers[ i ].id );
     $answer.data( 'member', answers[ i ].teamMember );
     $answer.data( 'image', answers[ i ].image );
 
@@ -313,8 +321,35 @@ function generateMobileTabletAnswers(){
     // add click handler
     $answer.on('click', function(ev){
       // logic to check if correct selection has been made
-      if( $( this ).data( 'id' ) == $("#drop-zone").data( 'id' ) ){
+      const $answerID = $( this ).attr( 'id' );
+      if( $answerID == $("#drop-zone").data( 'id' ) ){
         console.log("You are correct!  Try next question.")
+        
+        // fadeout/remove selected card after user reads prompt
+        $( this ).fadeOut( function(){ 
+          $( this ).remove();        
+        });
+        
+        // also remove selected card in Desktop view
+        let $correctAnswerOnDesktopView = $("#answers").children( "#" + $answerID );
+        $correctAnswerOnDesktopView.remove();
+
+        // populate image and member name in Mobile view placeholder 
+        const $dropZone = $( "#drop-zone" );
+        const $member = $( this ).data( 'member' );
+        const $image = $( this ).data( 'image' );
+        $dropZone.find("#member").text( $member );
+        $dropZone.find("#image img").attr( 'src', $image );
+        
+        // and scroll to top after
+        // window.scrollTo(0, 0);
+        // $(window).scrollTop(0);
+        $('html, body').animate( {scrollTop:0}, 'slow' );
+
+        // prompt user to confirm, and go to next question
+        
+      } else {
+        console.log('Incorrect answer.  Please try again.')
       }
 
       // let user submit selection
