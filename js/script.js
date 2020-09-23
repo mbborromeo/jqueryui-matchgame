@@ -265,7 +265,7 @@ $(document).ready( function(){
           // 3. when user closes dialog, reset placeholder and ask next question.
           // 4. dialog box closes.
           // 5. remove dialog box from DOM.
-          $('html, body').animate( {scrollTop:0}, 800, function(){
+          $('html, body').animate( {scrollTop:0}, 600, function(){
             setTimeout( 
               function(){
                 if( questions.length > 0 ){
