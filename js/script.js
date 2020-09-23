@@ -248,6 +248,14 @@ function generateQuestion(){
         }
       }    
       */
+
+      $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
+        .dialog({ modal: true });
+
+      // reset placeholder image and title
+
+      // choose next question at random
+
     }
   });
 }
@@ -329,9 +337,7 @@ function generateMobileTabletAnswers(){
     $answer.on('click', function(ev){
       // logic to check if correct selection has been made
       const $answerID = $( this ).attr( 'id' );
-      if( $answerID == $("#drop-zone").data( 'id' ) ){
-        console.log("You are correct!  Try next question.")
-        
+      if( $answerID == $("#drop-zone").data( 'id' ) ){        
         // fadeout/remove selected card after user reads prompt
         $( this ).fadeOut( function(){ 
           $( this ).remove();        
@@ -347,16 +353,39 @@ function generateMobileTabletAnswers(){
         const $image = $( this ).data( 'image' );
         $dropZone.find("#member").text( $member );
         $dropZone.find("#image img").attr( 'src', $image );
-        
-        // and scroll to top after
-        // window.scrollTo(0, 0);
-        // $(window).scrollTop(0);
-        $('html, body').animate( {scrollTop:0}, 'slow' );
+
+        // scroll to top after dialogue box is closed or 3 seconds have passed
+        // $('html, body').animate( {scrollTop:0}, 'slow' );
+        $('html, body').animate( {scrollTop:0}, 800, function(){
+          // after 1 second, show dialog popup box
+          setTimeout(function() {
+            $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
+              .dialog({ 
+                modal: true,
+                position: { my: "left bottom", at: "right bottom", collision: "fit" },
+                close: function( event, ui ){
+                  $dropZone.find("#member").text( 'Team member?' );
+                  $dropZone.find("#image img").attr( 'src', './images/0_placeholder.png' );
+                }
+              });            
+          }, 400 );
+        });
 
         // prompt user to confirm, and go to next question
-        
+        /*
+        $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
+          .dialog({ 
+            modal: true,
+            //position: { my: "center top", at: "center", of: "body" },
+            open: function( event, ui ){
+              $('html, body').animate( {scrollTop:0}, 'slow' );
+            }
+          });
+        */
+
       } else {
-        console.log('Incorrect answer.  Please try again.')
+        $( "<div><p>That was incorrect.  Please try again.</p></div>")
+          .dialog({ modal: true });
       }
 
       // let user submit selection
