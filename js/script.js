@@ -56,12 +56,10 @@ function generateQuestion( data ){
     $column2.append( $column2list );
   }
   $questionDiv.append( $column2 );
-
-  // append generated question to question area
-  $questionArea.append( $questionDiv );
-
+  
   // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
-  const $dropZone = $("#drop-zone");
+  const $dropZone = $("<div></div>");
+  $dropZone.attr( 'id', 'drop-zone' );
   $dropZone.data( 'id', question.id );
   $dropZone.droppable({
     accept: function( draggable ){
@@ -87,18 +85,16 @@ function generateQuestion( data ){
         .dialog({ 
           modal: true,
           close: function( event, ui ){
+            // reset placeholder image and title
             $dropZone.find("#member").text( 'Team member?' );
             $dropZone.find("#image img").attr( 'src', './images/0_placeholder.png' );
+
+
             
             $(this).remove();
           }
         });
 
-      // reset placeholder image and title
-      /*
-      $("#drop-zone #member").text( 'Team member?' );
-      $("#drop-zone #image img").attr( 'src', './images/0_placeholder.png' );
-      */
 
       // choose next question at random
       /*
@@ -125,6 +121,24 @@ function generateQuestion( data ){
       */
     }
   });
+
+  // initialise title
+  const $h3 = $("<h3></h3>");
+  $h3.attr( 'id', 'member' );
+  $h3.text( 'Team member?' );
+  $dropZone.append( $h3 );
+
+  // initialise placeholder image
+  const $imageWrapper = $("<div></div>");
+  $imageWrapper.attr( 'id', 'image' );
+  const $image = $("<img />");
+  $image.attr( 'src', './images/0_placeholder.png' );
+  $imageWrapper.append( $image );
+  $dropZone.append( $imageWrapper );
+
+  // append drop zone and generated question to question area
+  $questionArea.append( $dropZone );
+  $questionArea.append( $questionDiv );
 }
 
 /**
@@ -277,6 +291,7 @@ $(document).ready( function(){
   // get JSON data
   $.getJSON( "perceptions.json", function( data, status ){
     if( status==="success" ){
+      // generate question and drop zone area
       generateQuestion( data );
 
       // generate both draggable and clickable answers once
