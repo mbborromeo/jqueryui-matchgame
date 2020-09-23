@@ -222,13 +222,13 @@ function generateMobileTabletAnswers( data ){
         $dropZone.find("#image img").attr( 'src', $image );
 
         // scroll to top after dialogue box is closed or 3 seconds have passed
-        $('html, body').animate( {scrollTop:0}, 800, function(){
+        $('html, body').animate( {scrollTop:0}, 1000, function(){
           // after 1 second, show dialog popup box
           setTimeout(function() {
             $( "<div><p><b>"+ $member +"</b> is correct! Try the next question.</p></div>")
               .dialog({ 
                 modal: true,
-                position: { my: "left bottom", at: "right bottom", collision: "fit" },
+                //position: { my: "left bottom", at: "right bottom", collision: "fit" },
                 close: function( event, ui ){
                   $dropZone.find("#member").text( 'Team member?' );
                   $dropZone.find("#image img").attr( 'src', './images/0_placeholder.png' );
@@ -236,7 +236,7 @@ function generateMobileTabletAnswers( data ){
                   $(this).remove();
                 }
               });            
-          }, 400 );
+          }, 750 );
         });
 
         // prompt user to confirm, and go to next question
