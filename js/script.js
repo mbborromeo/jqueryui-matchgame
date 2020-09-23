@@ -179,7 +179,15 @@ $(document).ready( function(){
                   // remove dialog popup from DOM
                   $(this).remove();
                   $("#mobile-dialog").dialog('destroy');
-                }
+                },
+                buttons: [
+                  {
+                    text: "OK",
+                    click: function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                ]
               });
           } else {
             $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
@@ -189,7 +197,15 @@ $(document).ready( function(){
                   // remove dialog popup from DOM
                   $(this).remove();    
                   $("#mobile-dialog").dialog('destroy');          
-                }
+                },
+                buttons: [
+                  {
+                    text: "OK",
+                    click: function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                ]
               });
           }
         }
@@ -279,7 +295,15 @@ $(document).ready( function(){
                         
                         // choose next question at random
                         askNextQuestion(); // recursive function call to self
-                      }
+                      },
+                      buttons: [
+                        {
+                          text: "OK",
+                          click: function() {
+                            $( this ).dialog( "close" );
+                          }
+                        }
+                      ]
                     });                
                 } else {
                   $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
@@ -289,7 +313,15 @@ $(document).ready( function(){
                         // remove dialog popup from DOM
                         $(this).remove();
                         $("#mobile-dialog").dialog('destroy');
-                      }
+                      },
+                      buttons: [
+                        {
+                          text: "OK",
+                          click: function() {
+                            $( this ).dialog( "close" );
+                          }
+                        }
+                      ]
                     });
                 }
               }, 
@@ -303,7 +335,15 @@ $(document).ready( function(){
               close: function( event, ui ){
                 $(this).remove();
                 $("#mobile-dialog").dialog('destroy');
-              }
+              },
+              buttons: [
+                {
+                  text: "OK",
+                  click: function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              ]
             });
         }
   
