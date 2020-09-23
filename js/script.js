@@ -214,7 +214,7 @@ function generateQuestion(){
       });
 
       // hide corresponding answer on Mobile view as well
-      let $correctAnswerOnMobile = $("#answers-mobile").children( "#" + ui.draggable.attr('id') );
+      let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
       $correctAnswerOnMobile.remove();
       
       /*
@@ -259,17 +259,24 @@ function generateQuestion(){
 function enableDesktopOrMobileAnswers(){
   // Note: 1024px is usually max screen width of a tablet/touch device,
   // however there are still same touch screen tablets much wider, so this is not an accurate way to determine if device is touch screen.
-  // May need to find a better way to determine if device is a touch screen, and not rely on screen width...
-  
-  if( $(window).width() <= 1024 ){
+  // if( $(window).width() <= 1024 ){
+
+  // Source: https://codepen.io/tteske/pen/KKwxOxp
+  // Uses a better way to determine if device is a touch screen which does not rely on screen width.
+  // This works, however, you cannot switch between touch-screen and mouse-pointer devices on emulator. You need to refresh after doing so.
+  if("ontouchstart" in document.documentElement){  
+    console.log('You are using a touch-screen device!!!')
+
     // hide draggable answers
     $("#answers").addClass( 'hidden' );
 
     // show clickable answers for Mobile/Tablet view
-    $("#answers-mobile").removeClass( 'hidden' );
+    $("#answers-touch-screen").removeClass( 'hidden' );
   } else {
+    console.log('You are using a mouse pointer device')
+
     // hide clickable answers
-    $("#answers-mobile").addClass( 'hidden' );
+    $("#answers-touch-screen").addClass( 'hidden' );
 
     // show draggable answers for Desktop view
     $("#answers").removeClass( 'hidden' );
@@ -363,7 +370,7 @@ function generateMobileTabletAnswers(){
       // else if incorrect - dialog choose another answer. 
     });
 
-    $answer.appendTo( "#answers-mobile" );
+    $answer.appendTo( "#answers-touch-screen" );
   }
 }
 
