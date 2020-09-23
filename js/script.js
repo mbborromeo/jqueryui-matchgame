@@ -194,7 +194,7 @@ function generateQuestion(){
   // append generated question to question area
   $questionArea.append( $questionDiv );
 
-  // define drop zone corresponding to question on Desktop view
+  // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
   const $dropZone = $("#drop-zone");
   $dropZone.data( 'id', question.id );
   $dropZone.droppable({
@@ -214,7 +214,7 @@ function generateQuestion(){
       });
 
       // hide corresponding answer on Mobile view as well
-      let $correctAnswerOnMobile = $("#answers-mobile").children( "#" + ui.draggable.attr('id') );
+      let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
       $correctAnswerOnMobile.remove();
       
       /*
@@ -253,21 +253,28 @@ function generateQuestion(){
 }
 
 /**
- * Check window width to determine if should use drag 'n' drop functionality for Desktop view, 
- * or click selection for Mobile/Tablet view < 768px.
+ * Determine whether should use drag 'n' drop functionality for Mouse-pointer devices (Desktop), 
+ * or click selection functionality for Touch-screen devices (Mobile/Tablet).
  */
 function enableDesktopOrMobileAnswers(){
-  if( $(window).width() < 768 ){
+  // Note: 1024px is usually max screen width of a tablet/touch devices,
+  // however there are still same touch screen tablets much wider, so this is not an accurate way to determine if device is touch screen.
+  // if( $(window).width() <= 1024 ){
+
+  // Source: https://codepen.io/tteske/pen/KKwxOxp
+  // Uses a better way to determine if device is a touch screen which does not rely on screen width.
+  // This works, however, you cannot switch between touch-screen and mouse-pointer devices on emulator. You need to refresh after doing so.
+  if("ontouchstart" in document.documentElement){
     // hide draggable answers
     $("#answers").addClass( 'hidden' );
 
-    // show clickable answers
-    $("#answers-mobile").removeClass( 'hidden' );
+    // show clickable answers for Mobile/Tablet view
+    $("#answers-touch-screen").removeClass( 'hidden' );
   } else {
     // hide clickable answers
-    $("#answers-mobile").addClass( 'hidden' );
+    $("#answers-touch-screen").addClass( 'hidden' );
 
-    // show draggable answers
+    // show draggable answers for Desktop view
     $("#answers").removeClass( 'hidden' );
   }
 }
@@ -359,12 +366,12 @@ function generateMobileTabletAnswers(){
       // else if incorrect - dialog choose another answer. 
     });
 
-    $answer.appendTo( "#answers-mobile" );
+    $answer.appendTo( "#answers-touch-screen" );
   }
 }
 
 // Executes right after the HTML document is loaded property and the DOM is ready
-$(document).ready( function() {
+$(document).ready( function(){
   generateQuestion();
 
   // generate both draggable and clickable answers once
@@ -372,7 +379,7 @@ $(document).ready( function() {
   generateMobileTabletAnswers();
   
   // initial screen width check to determine whether to show draggable or clickable answers
-  enableDesktopOrMobileAnswers(); 
+  enableDesktopOrMobileAnswers();
 
   /**
    * Event handlers
