@@ -99,8 +99,6 @@ $(document).ready( function(){
    */
   function askNextQuestion(){
     let question = questions.pop();
-    console.log('Correct question.id is', question.id)
-    console.log('askNextQuestion qs remaining after this one', questions.length)  
   
     if( question ){
       // get question data from JSON object
@@ -214,8 +212,6 @@ $(document).ready( function(){
       $questionArea.empty();
       $questionArea.append( $dropZone );
       $questionArea.append( $questionDiv );
-    } else {
-      console.log('No more questions')
     }
   }
 
@@ -241,8 +237,6 @@ $(document).ready( function(){
       $answer.on('click', function(ev){
         // logic to check if correct selection has been made
         const $answerID = $( this ).attr( 'id' );
-
-        console.log('ID clicked', $answerID)
 
         if( $answerID == $("#drop-zone").data( 'id' ) ){        
           // fadeout/remove selected card after user reads prompt
