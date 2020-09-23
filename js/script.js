@@ -348,7 +348,6 @@ function generateMobileTabletAnswers(){
         $dropZone.find("#image img").attr( 'src', $image );
 
         // scroll to top after dialogue box is closed or 3 seconds have passed
-        // $('html, body').animate( {scrollTop:0}, 'slow' );
         $('html, body').animate( {scrollTop:0}, 800, function(){
           // after 1 second, show dialog popup box
           setTimeout(function() {
