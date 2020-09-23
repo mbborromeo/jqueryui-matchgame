@@ -257,17 +257,21 @@ function generateQuestion(){
  * or click selection for Mobile/Tablet view < 768px.
  */
 function enableDesktopOrMobileAnswers(){
-  if( $(window).width() < 768 ){
+  // Note: 1024px is usually max screen width of a tablet/touch device,
+  // however there are still same touch screen tablets much wider, so this is not an accurate way to determine if device is touch screen.
+  // May need to find a better way to determine if device is a touch screen, and not rely on screen width...
+  
+  if( $(window).width() <= 1024 ){
     // hide draggable answers
     $("#answers").addClass( 'hidden' );
 
-    // show clickable answers
+    // show clickable answers for Mobile/Tablet view
     $("#answers-mobile").removeClass( 'hidden' );
   } else {
     // hide clickable answers
     $("#answers-mobile").addClass( 'hidden' );
 
-    // show draggable answers
+    // show draggable answers for Desktop view
     $("#answers").removeClass( 'hidden' );
   }
 }
