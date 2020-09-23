@@ -287,28 +287,34 @@ $(document).ready( function(){
           */
           if( questions.length > 0 ){
             $( "<div><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-            .dialog({ 
-              modal: true,
-              close: function( event, ui ){  
-                // choose next question at random
-                askNextQuestion(); // recursive function call to self
+              .dialog({ 
+                modal: true,
+                close: function( event, ui ){
+                  // choose next question at random
+                  askNextQuestion(); // recursive function call to self
+                  
+                  // remove dialog popup
+                  $(this).fadeOut( 600, function(){
+                    $(this).remove();
+                  });
 
-                // remove dialog popup
-                $(this).fadeOut( 600, function(){
-                  $(this).remove();
-                });                
-
-                // scroll up
-                $('html, body').animate( {scrollTop:0}, 800 );
-                //$(window).scrollTop(0);
-              }
-            });
+                  // scroll up
+                  $('html, body').animate( {scrollTop:0}, 800 );
+                  //$(window).scrollTop(0);                  
+                }
+              });
           } else {
             $( "<div><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
               .dialog({ 
                 modal: true,
                 close: function( event, ui ){
-                  $(this).remove();              
+                  // remove dialog popup
+                  $(this).fadeOut( 600, function(){
+                    $(this).remove();
+                  });
+                  
+                  // scroll up
+                  $('html, body').animate( {scrollTop:0}, 800 );
                 }
               });
           }
