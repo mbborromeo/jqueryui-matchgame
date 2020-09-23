@@ -169,23 +169,26 @@ $(document).ready( function(){
           $correctAnswerOnMobile.remove();      
   
           if( questions.length > 0 ){
-            $( "<div><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-            .dialog({ 
-              modal: true,
-              close: function( event, ui ){  
-                // choose next question at random
-                askNextQuestion(); // recursive function call to self
+            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+              .dialog({ 
+                modal: true,
+                close: function( event, ui ){  
+                  // choose next question at random
+                  askNextQuestion(); // recursive function call to self
 
-                // remove dialog popup
-                $(this).remove();
-              }
-            });
+                  // remove dialog popup from DOM
+                  $(this).remove();
+                  $("#mobile-dialog").dialog('destroy');
+                }
+              });
           } else {
-            $( "<div><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
+            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
               .dialog({ 
                 modal: true,
                 close: function( event, ui ){
-                  $(this).remove();              
+                  // remove dialog popup from DOM
+                  $(this).remove();    
+                  $("#mobile-dialog").dialog('destroy');          
                 }
               });
           }
@@ -253,78 +256,48 @@ $(document).ready( function(){
           const $member = $( this ).data( 'member' );
           const $image = $( this ).data( 'image' );
           $dropZone.find("#member").text( $member );
-          $dropZone.find("#image img").attr( 'src', $image );
-          
-          /*
-          if( questions.length > 0 ){
-            // scroll to top after dialogue box is closed or 3 seconds have passed
-            $('html, body').animate( {scrollTop:0}, 600, function(){
-              // after 1 second, show dialog popup box
-              setTimeout(function() {
-                $( "<div>MOBILE <p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-                  .dialog({ 
-                    modal: true,
-                    close: function( event, ui ){
-                      console.log('mobile dialog closed!!!')  
-                      // choose next question at random
-                      askNextQuestion(); // recursive function call to self
-    
-                      // remove dialog popup
-                      $(this).remove();
-                    }
-                  });
-              }, 200 );
-            })
-          } else {
-            $( "<div><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){
-                  $(this).remove();              
-                }
-              });
-          }
-          */
-          if( questions.length > 0 ){
-            $( "<div><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){
-                  // choose next question at random
-                  askNextQuestion(); // recursive function call to self
-                  
-                  // remove dialog popup
-                  $(this).fadeOut( 600, function(){
-                    $(this).remove();
-                  });
+          $dropZone.find("#image img").attr( 'src', $image );          
 
-                  // scroll up
-                  $('html, body').animate( {scrollTop:0}, 800 );
-                  //$(window).scrollTop(0);                  
-                }
-              });
-          } else {
-            $( "<div><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){
-                  // remove dialog popup
-                  $(this).fadeOut( 600, function(){
+          // Upon choosing correct answer:
+          // 1. a) animate screen to top, 
+          //    b) so image/title inserted in placeholder is visible, 
+          // 2. display dialog popup box saying "correct answer", "incorrect answer", OR "you have finished all questions".
+          // 3. when user closes dialog, reset placeholder and ask next question.
+          // 4. dialog box closes.
+          // 5. remove dialog box from DOM.          
+          $('html, body').animate( {scrollTop:0}, 800, function(){
+            if( questions.length > 0 ){
+              $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+                .dialog({ 
+                  modal: true,
+                  close: function( event, ui ){                    
+                    // remove dialog popup from DOM
                     $(this).remove();
-                  });
-                  
-                  // scroll up
-                  $('html, body').animate( {scrollTop:0}, 800 );
-                }
-              });
-          }
-
+                    $("#mobile-dialog").dialog('destroy');
+                    
+                    // choose next question at random
+                    askNextQuestion(); // recursive function call to self
+                  }
+                });                
+            } else {
+              $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
+                .dialog({ 
+                  modal: true,
+                  close: function( event, ui ){
+                    // remove dialog popup from DOM
+                    $(this).remove();
+                    $("#mobile-dialog").dialog('destroy');
+                  }
+                });
+            }
+          });
         } else {
-          $( "<div><p>That answer was incorrect.  Please try again.</p></div>")
+          $( "<div id='mobile-dialog'><p>That answer was incorrect.  Please try again.</p></div>")
             .dialog({ 
               modal: true,
               close: function( event, ui ){
-                $(this).remove();              
+                $(this).remove();
+                $("#mobile-dialog").dialog('destroy');
               }
             });
         }
