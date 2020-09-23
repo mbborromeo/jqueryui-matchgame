@@ -217,8 +217,16 @@ function generateQuestion(){
       let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
       $correctAnswerOnMobile.remove();      
 
-      $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
-        .dialog({ modal: true });
+      $( "<div><p><b>"+ $member +"</b> is correct! Try the next question.</p></div>")
+        .dialog({ 
+          modal: true,
+          close: function( event, ui ){
+            $dropZone.find("#member").text( 'Team member?' );
+            $dropZone.find("#image img").attr( 'src', './images/0_placeholder.png' );
+            
+            $(this).remove();
+          }
+        });
 
       // reset placeholder image and title
       /*
@@ -351,7 +359,7 @@ function generateMobileTabletAnswers(){
         $('html, body').animate( {scrollTop:0}, 800, function(){
           // after 1 second, show dialog popup box
           setTimeout(function() {
-            $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
+            $( "<div><p><b>"+ $member +"</b> is correct! Try the next question.</p></div>")
               .dialog({ 
                 modal: true,
                 position: { my: "left bottom", at: "right bottom", collision: "fit" },
@@ -367,7 +375,7 @@ function generateMobileTabletAnswers(){
 
         // prompt user to confirm, and go to next question
         /*
-        $( "<div><p><b>"+ $member +"</b> was correct! Try the next question.</p></div>")
+        $( "<div><p><b>"+ $member +"</b> is correct! Try the next question.</p></div>")
           .dialog({ 
             modal: true,
             //position: { my: "center top", at: "center", of: "body" },
@@ -378,7 +386,7 @@ function generateMobileTabletAnswers(){
         */
 
       } else {
-        $( "<div><p>That was incorrect.  Please try again.</p></div>")
+        $( "<div><p>That answer was incorrect.  Please try again.</p></div>")
           .dialog({ 
             modal: true,
             close: function( event, ui ){
