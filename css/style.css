@@ -90,6 +90,16 @@ body {
   margin-top: 2%;
 }
 
+#answers > div:active, 
+#answers-touch-screen > div:active { 
+  border: 3px solid #FFF200;
+}
+
+#answers > div:active h3, 
+#answers-touch-screen > div:active h3 { 
+  background-color: #FFF200;
+}
+
 #question-area > div#drop-zone {
   flex: 0 1 23%;
 }
