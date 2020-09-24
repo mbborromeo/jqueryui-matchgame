@@ -162,6 +162,7 @@ $(document).ready( function(){
           $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
             .dialog({ 
               modal: true,
+              dialogClass: "no-close",
               close: function( event, ui ){  
                 // choose next question at random
                 askNextQuestion(); // recursive function call to self
@@ -183,6 +184,7 @@ $(document).ready( function(){
           $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
             .dialog({ 
               modal: true,
+              dialogClass: "no-close",
               close: function( event, ui ){
                 // remove dialog popup from DOM
                 $(this).remove();    
@@ -324,6 +326,7 @@ $(document).ready( function(){
                   $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
                     .dialog({ 
                       modal: true,
+                      dialogClass: "no-close",
                       close: function( event, ui ){                    
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -345,6 +348,7 @@ $(document).ready( function(){
                   $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
                     .dialog({ 
                       modal: true,
+                      dialogClass: "no-close",
                       close: function( event, ui ){
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -370,6 +374,7 @@ $(document).ready( function(){
           $( "<div id='mobile-dialog'><p>That answer was incorrect.  Please try again.</p></div>")
             .dialog({ 
               modal: true,
+              dialogClass: "no-close",
               close: function( event, ui ){
                 $(this).remove();
                 $("#mobile-dialog").dialog('destroy');

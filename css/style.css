@@ -181,6 +181,10 @@ body {
   width: 90%;
 }
 
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
 /* Media Queries for mobile-view */
 @media only screen and (max-width: 767px) {
   #question-area,
