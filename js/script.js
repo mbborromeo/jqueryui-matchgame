@@ -10,9 +10,9 @@ function randomize( array ){
 
 function generateQuestions( data ){
   // generate a random set of questions
-  let questions = [...data];
-  randomize( questions );
-  return questions;   
+  let questionsList = [...data];
+  randomize( questionsList );
+  return questionsList;
 }
 
 /**
@@ -72,13 +72,18 @@ function generateDesktopAnswers( data ){
 
 // Executes right after the HTML document is loaded property and the DOM is ready
 $(document).ready( function(){
-  var questions; // global 
+  // global variables
+  var questions;
+  const $summaryArea = $("#summary-area");
 
   // get JSON data
   $.getJSON( "perceptions.json", function( data, status ){
     if( status==="success" ){
       // generate question and drop zone area
       questions = generateQuestions( data );
+
+      // generate Q & A summary, but it is initially hidden from view
+      generateSummary();
 
       // choose a question to ask user
       askNextQuestion();
@@ -97,6 +102,73 @@ $(document).ready( function(){
   /**
    * Function declarations
    */
+  function generateSummary(){
+    for( let q=0; q < questions.length; q++ ){
+      // build answer area
+      const $summaryItem = $("<div></div>");
+      $summaryItem.addClass('summary-item');
+
+      const $answer = $("<div></div>");
+      $answer.addClass('answer');
+
+      const $h3 = $("<h3></h3>");
+      $h3.text( questions[q].teamMember );
+      $answer.append( $h3 );
+
+      const $imageWrapper = $("<div></div");
+      $imageWrapper.addClass('image');
+      const $image = $("<img />");
+      $image.attr( 'src', questions[q].image );
+      $imageWrapper.append( $image );
+      $answer.append( $imageWrapper );
+
+      $summaryItem.append( $answer );
+
+      // build question columns
+      const $question = $("<div></div>");
+      $question.addClass('question');
+
+      // build 1st column
+      const $column1 = $("<div></div>");
+      $column1.addClass('column');
+
+      const $column1Heading = $("<h2></h2>");
+      $column1Heading.text( 'Priorities' );
+      $column1.append( $column1Heading );
+
+      const $column1List = $("<ul></ul>");
+      for( let p=0; p < questions[q].priorities.length; p++ ){
+        const $listItem = $("<li></li>");
+        $listItem.text( questions[q].priorities[p] );
+        $column1List.append( $listItem );
+      }
+      $column1.append( $column1List );
+      $question.append( $column1 );
+
+      // build 2nd column
+      const $column2 = $("<div></div>");
+      $column2.addClass('column');
+
+      const $column2Heading = $("<h2></h2>");
+      $column2Heading.text( 'Concerns and Challenges' );
+      $column2.append( $column2Heading );
+
+      const $column2List = $("<ul></ul>");
+      for( let c=0; c < questions[q].concernsAndChallenges.length; c++ ){
+        const $listItem = $("<li></li>");
+        $listItem.text( questions[q].concernsAndChallenges[c] );
+        $column2List.append( $listItem );
+      }
+      $column2.append( $column2List );
+      $question.append( $column2 );
+
+      $summaryItem.append( $question );
+
+      // append it to DOM, but make sure area is initially hidden
+      $summaryArea.append( $summaryItem );
+    }
+  }
+
   function askNextQuestion(){
     let question = questions.pop();
   
@@ -196,7 +268,15 @@ $(document).ready( function(){
                 close: function( event, ui ){
                   // remove dialog popup from DOM
                   $(this).remove();    
-                  $("#mobile-dialog").dialog('destroy');          
+                  $("#mobile-dialog").dialog('destroy');
+                  
+                  // hide questions
+                  $("#question-area").hide();
+                  $("#answers").hide();
+                  $("#answers-touch-screen").hide();
+
+                  // display summary of questions with answers
+                  $("#summary-area").css({ 'display':'block' });
                 },
                 buttons: [
                   {

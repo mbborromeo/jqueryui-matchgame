@@ -3,7 +3,8 @@ body {
   font-weight: 400;
 }
 
-#question-area {
+#question-area,
+.summary-item {
   background-color: #6994AB;
   border-radius: 12px 12px 0 12px;
   display: flex;
@@ -15,11 +16,17 @@ body {
 
 #question-area, 
 #answers,
-#answers-touch-screen {
+#answers-touch-screen,
+.summary-item {
   padding: 10px;
 }
 
-#question {
+.summary-item {
+  margin-bottom: 10px;
+}
+
+#question,
+.summary-item > .question {
   border: 3px solid #004E73;
   background-color: #D1DBE3;
   border-radius: 12px 12px 0 12px;
@@ -34,7 +41,8 @@ body {
   flex-wrap: nowrap;
 }
 
-#question h2 {
+#question h2,
+.summary-item > .question h2 {
   margin-top: 0;
   margin-bottom: 20px;
   font-weight: 600;
@@ -42,25 +50,29 @@ body {
   line-height: 19px;
 }
 
-#question .column {
+#question .column,
+.summary-item > .question .column {
   padding-right: 16px;
   vertical-align: top;
   flex: 0 1 55%;
 }
 
-#question .column:first-child {
+#question .column:first-child,
+.summary-item > .question .column:first-child {
   border-right: 1px solid #004E73;
   padding-left: 0;
   margin-right: 16px;
   flex: 0 1 35%;
 }
 
-#question ul {
+#question ul,
+.summary-item > .question ul {
   margin: 0;
   padding-left: 17px;
 }
 
-#question ul li {
+#question ul li,
+.summary-item > .question ul li {
   padding-bottom: 14px;
 }
 
@@ -76,7 +88,8 @@ body {
 
 #answers > div, 
 #answers-touch-screen > div,
-#question-area > div#drop-zone {
+#question-area > div#drop-zone,
+.summary-item > .answer {
   background-color: white;
   border: 3px solid #004E73;
   border-radius: 8px;  
@@ -100,13 +113,15 @@ body {
   background-color: #FFF200;
 }
 
-#question-area > div#drop-zone {
+#question-area > div#drop-zone,
+.summary-item > .answer {
   flex: 0 1 23%;
 }
 
 #answers > div h3, 
 #answers-touch-screen > div h3,
-#question-area > div#drop-zone h3 {
+#question-area > div#drop-zone h3,
+.summary-item > .answer h3 {
   display: block;
   height: 38px;
   border-radius: 4px;
@@ -122,13 +137,15 @@ body {
 
 #answers > div > div, 
 #answers-touch-screen > div > div,
-#question-area > div#drop-zone > div {
+#question-area > div#drop-zone > div,
+.summary-item > .answer > div {
   padding: 20px 16px;
 }
 
 #answers > div > div img, 
 #answers-touch-screen > div > div img,
-#question-area > div#drop-zone > div img {
+#question-area > div#drop-zone > div img,
+.summary-item > .answer > div img {
   width: 100%;
   height: auto;
 }
@@ -143,6 +160,10 @@ body {
 
 #answers.hidden,
 #answers-touch-screen.hidden {
+  display: none;
+}
+
+#summary-area {
   display: none;
 }
 
@@ -163,24 +184,29 @@ body {
 
 /* Media Queries for mobile-view */
 @media only screen and (max-width: 767px) {
-  #question-area {
+  #question-area,
+  .summary-item {
     display: block;
   }
   
-  #question-area > div#drop-zone {
+  #question-area > div#drop-zone,
+  .summary-item > .answer {
     margin-bottom: 14px;
   }
 
-  #question {
+  #question,
+  .summary-item > .question {
     display: block;
   }
 
-  #question .column {
+  #question .column,
+  .summary-item > .question .column {
     width: auto;
     padding-left: 0;
   }
 
-  #question .column:first-child {
+  #question .column:first-child,
+  .summary-item > .question .column:first-child {
     width: auto;
     border-right: none;
     margin-bottom: 16px;
