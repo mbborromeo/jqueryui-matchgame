@@ -223,7 +223,7 @@ $(document).ready( function(){
       // initialise title
       const $h3 = $("<h3></h3>");
       $h3.attr( 'id', 'member' );
-      $h3.text( 'Team member?' );
+      $h3.text( 'Who is this team member?' );
       $dropZone.empty();
       $dropZone.append( $h3 );
   
