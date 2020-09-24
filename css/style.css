@@ -159,11 +159,9 @@ body {
 }
 
 #answers.hidden,
-#answers-touch-screen.hidden {
-  display: none;
-}
-
-#summary-area {
+#answers-touch-screen.hidden,
+#summary-area.hidden,
+#question-area.hidden {
   display: none;
 }
 

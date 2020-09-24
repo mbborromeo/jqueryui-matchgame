@@ -75,6 +75,7 @@ $(document).ready( function(){
   // global variables
   var questions;
   const $summaryArea = $("#summary-area");
+  $summaryArea.addClass('hidden');
 
   // get JSON data
   $.getJSON( "perceptions.json", function( data, status ){
@@ -271,12 +272,12 @@ $(document).ready( function(){
                   $("#mobile-dialog").dialog('destroy');
                   
                   // hide questions
-                  $("#question-area").hide();
-                  $("#answers").hide();
-                  $("#answers-touch-screen").hide();
+                  $("#question-area").addClass('hidden');
+                  $("#answers").addClass('hidden');
+                  $("#answers-touch-screen").addClass('hidden');
 
                   // display summary of questions with answers
-                  $("#summary-area").css({ 'display':'block' });
+                  $("#summary-area").removeClass('hidden');
                 },
                 buttons: [
                   {
