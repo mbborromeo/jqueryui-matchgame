@@ -163,6 +163,7 @@ body {
 #summary-area.hidden,
 #question-area.hidden {
   display: none;
+  padding: 0;
 }
 
 /* jQuery UI overrides */
