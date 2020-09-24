@@ -170,6 +170,16 @@ $(document).ready( function(){
     }
   }
 
+  function showSummary(){
+    // hide questions
+    $("#question-area").addClass('hidden');
+    $("#answers").addClass('hidden');
+    $("#answers-touch-screen").addClass('hidden');
+
+    // display summary of questions with answers
+    $("#summary-area").removeClass('hidden');
+  }
+
   function askNextQuestion(){
     let question = questions.pop();
   
@@ -271,13 +281,7 @@ $(document).ready( function(){
                   $(this).remove();    
                   $("#mobile-dialog").dialog('destroy');
                   
-                  // hide questions
-                  $("#question-area").addClass('hidden');
-                  $("#answers").addClass('hidden');
-                  $("#answers-touch-screen").addClass('hidden');
-
-                  // display summary of questions with answers
-                  $("#summary-area").removeClass('hidden');
+                  showSummary();
                 },
                 buttons: [
                   {
@@ -356,12 +360,12 @@ $(document).ready( function(){
           $dropZone.find("#image img").attr( 'src', $image );          
 
           // Upon choosing correct answer:
-          // 1. a) animate screen to top, and maybe pause there 
-          //    b) so image/title inserted in placeholder is visible, 
-          // 2. display dialog popup box saying "correct answer", "incorrect answer", OR "you have finished all questions".
-          // 3. when user closes dialog, reset placeholder and ask next question.
-          // 4. dialog box closes.
-          // 5. remove dialog box from DOM.
+          // animate screen to top, 
+          // pause there a little so image/title inserted in placeholder can be noticed, 
+          // display dialog popup box with feedback message
+          // when user closes dialog, reset placeholder and ask next question
+          // dialog box closes
+          // remove dialog box from DOM - important otherwise close button doesn't work.
           $('html, body').animate( {scrollTop:0}, 600, function(){
             setTimeout( 
               function(){
@@ -394,6 +398,8 @@ $(document).ready( function(){
                         // remove dialog popup from DOM
                         $(this).remove();
                         $("#mobile-dialog").dialog('destroy');
+
+                        showSummary();
                       },
                       buttons: [
                         {
@@ -427,9 +433,6 @@ $(document).ready( function(){
               ]
             });
         }
-  
-        // optional: let user submit selection
-        
       });
   
       $answer.appendTo( "#answers-touch-screen" );
