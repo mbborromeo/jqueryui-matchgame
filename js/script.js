@@ -20,15 +20,55 @@ $(document).ready( function(){
     });
   };
 
-  function generateQuestions( data ){
+  function arrangeQuestions( data ){
     // generate a random set of questions
     let questionsList = data.slice(); // IE 11 doesn't like syntax [...data]
     randomize( questionsList );
     return questionsList;
   }
 
+  function generateMemberPriorities( question ){
+    const $column1 = $("<div></div>");
+    $column1.addClass('column');
+
+    const $column1Heading = $("<h2></h2>");
+    $column1Heading.text( 'Priorities' );
+    $column1.append( $column1Heading );
+
+    const $column1List = $("<ul></ul>");
+    for( let p=0; p < question.priorities.length; p++ ){
+      const $listItem = $("<li></li>");
+      $listItem.text( question.priorities[p] );
+      $column1List.append( $listItem );
+    }
+    $column1.append( $column1List );
+
+    return $column1;
+  }
+
+  function generateMemberConcerns( question ){
+    const $column2 = $("<div></div>");
+    $column2.addClass('column');
+
+    const $column2Heading = $("<h2></h2>");
+    $column2Heading.text( 'Concerns and Challenges' );
+    $column2.append( $column2Heading );
+
+    const $column2List = $("<ul></ul>");
+    for( let c=0; c < question.concernsAndChallenges.length; c++ ){
+      const $listItem = $("<li></li>");
+      $listItem.text( question.concernsAndChallenges[c] );
+      $column2List.append( $listItem );
+    }
+    $column2.append( $column2List );
+
+    return $column2;
+  }
+
   function generateSummary(){
     for( let q=0; q < questions.length; q++ ){
+      const question = questions[q];
+
       // build answer area
       const $summaryItem = $("<div></div>");
       $summaryItem.addClass('summary-item');
@@ -37,57 +77,32 @@ $(document).ready( function(){
       $answer.addClass('answer');
 
       const $h3 = $("<h3></h3>");
-      $h3.text( questions[q].teamMember );
+      $h3.text( question.teamMember );
       $answer.append( $h3 );
 
       const $imageWrapper = $("<div></div");
       $imageWrapper.addClass('image');
       const $image = $("<img />");
-      $image.attr( 'src', questions[q].image );
+      $image.attr( 'src', question.image );
       $imageWrapper.append( $image );
       $answer.append( $imageWrapper );
 
       $summaryItem.append( $answer );
 
       // build question columns
-      const $question = $("<div></div>");
-      $question.addClass('question');
+      const $questionDiv = $("<div></div>");
+      $questionDiv.addClass('question');
 
       // build 1st column
-      const $column1 = $("<div></div>");
-      $column1.addClass('column');
-
-      const $column1Heading = $("<h2></h2>");
-      $column1Heading.text( 'Priorities' );
-      $column1.append( $column1Heading );
-
-      const $column1List = $("<ul></ul>");
-      for( let p=0; p < questions[q].priorities.length; p++ ){
-        const $listItem = $("<li></li>");
-        $listItem.text( questions[q].priorities[p] );
-        $column1List.append( $listItem );
-      }
-      $column1.append( $column1List );
-      $question.append( $column1 );
+      const $column1 = generateMemberPriorities( question );      
+      $questionDiv.append( $column1 );
 
       // build 2nd column
-      const $column2 = $("<div></div>");
-      $column2.addClass('column');
+      const $column2 = generateMemberConcerns( question );
+      $questionDiv.append( $column2 );
 
-      const $column2Heading = $("<h2></h2>");
-      $column2Heading.text( 'Concerns and Challenges' );
-      $column2.append( $column2Heading );
-
-      const $column2List = $("<ul></ul>");
-      for( let c=0; c < questions[q].concernsAndChallenges.length; c++ ){
-        const $listItem = $("<li></li>");
-        $listItem.text( questions[q].concernsAndChallenges[c] );
-        $column2List.append( $listItem );
-      }
-      $column2.append( $column2List );
-      $question.append( $column2 );
-
-      $summaryItem.append( $question );
+      // append Question to DOM
+      $summaryItem.append( $questionDiv );
 
       // append it to DOM, but make sure area is initially hidden
       $summaryArea.append( $summaryItem );
@@ -109,49 +124,18 @@ $(document).ready( function(){
     $questionDiv.attr('id', 'question');
 
     // build column 1 of question
-    let $column1 = $("<div></div>");
-    $column1.addClass('column');
-    let $column1heading = $("<h2></h2>");
-    $column1heading.text("Priorities");
-    $column1.append( $column1heading );
-    if( question.priorities.length > 0 ){
-      let $column1list = $("<ul></ul>");
-
-      for( let i=0; i < question.priorities.length; i++ ){
-        let $listItem = $("<li></li>");
-        $listItem.text( question.priorities[i] );
-        $column1list.append( $listItem );
-      }
-      
-      $column1.append( $column1list );
-    }
-    //$questionDiv.empty();
+    const $column1 = generateMemberPriorities( question ); 
     $questionDiv.append( $column1 );
 
     // build column 2 of question
-    let $column2 = $("<div></div>");
-    $column2.addClass('column');
-    let $column2heading = $("<h2></h2>");
-    $column2heading.text("Concerns and Challenges");
-    $column2.append( $column2heading );
-    if( question.concernsAndChallenges.length > 0 ){
-      let $column2list = $("<ul></ul>");
-
-      for( let j=0; j < question.concernsAndChallenges.length; j++ ){
-        let $listItem = $("<li></li>");
-        $listItem.text( question.concernsAndChallenges[j] );
-        $column2list.append( $listItem );
-      }
-      
-      $column2.append( $column2list );
-    }
+    const $column2 = generateMemberConcerns( question );
     $questionDiv.append( $column2 );
 
     return $questionDiv;
   }
 
   // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
-  function generateDropZone( questionID ){    
+  function generateAnswerDropZone( questionID ){    
     const $dropZone = $("<div></div>");
     $dropZone.attr( 'id', 'drop-zone' );
     $dropZone.data( 'id', questionID );
@@ -250,7 +234,7 @@ $(document).ready( function(){
       
       // drop zone corresponding to question 
       // will be visible/used for both Mouse-pointer (desktop) and Touch-screen devices (mobile/tablet)
-      const $dzone = generateDropZone( question.id );
+      const $dzone = generateAnswerDropZone( question.id );
   
       // append drop zone and generated question to question area
       $questionArea.append( $dzone );
@@ -431,7 +415,7 @@ $(document).ready( function(){
   $.getJSON( "perceptions.json", function( data, status ){
     if( status==="success" ){
       // generate question and drop zone area
-      questions = generateQuestions( data );
+      questions = arrangeQuestions( data );
 
       // generate Q & A summary, but it is initially hidden from view
       generateSummary();
