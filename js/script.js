@@ -273,7 +273,7 @@ $(document).ready( function(){
                 ]
               });
           } else {
-            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
+            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
               .dialog({ 
                 modal: true,
                 close: function( event, ui ){
@@ -391,7 +391,7 @@ $(document).ready( function(){
                       ]
                     });                
                 } else {
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!</p></div>")
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
                     .dialog({ 
                       modal: true,
                       close: function( event, ui ){
