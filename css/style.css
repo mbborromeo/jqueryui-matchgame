@@ -172,6 +172,20 @@ body {
   display: none;
 }
 
+.bg-correct.ui-widget-content {
+  background: lawngreen; /* #FFF200 */
+}
+
+.bg-incorrect.ui-widget-content {
+  background: coral;
+}
+
+.bg-correct .ui-widget-content,
+.bg-incorrect .ui-widget-content
+ {
+  background: none;
+}
+
 /* jQuery UI overrides */
 .ui-dialog .ui-dialog-buttonpane {
   padding: .3em .4em .5em .4em;

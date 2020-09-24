@@ -159,10 +159,10 @@ $(document).ready( function(){
         $correctAnswerOnMobile.remove();      
 
         if( questions.length > 0 ){
-          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questions.length +"</b> more question/s. Try the next one.</p></div>")
             .dialog({ 
               modal: true,
-              dialogClass: "no-show",
+              dialogClass: "no-show bg-correct",
               close: function( event, ui ){  
                 // choose next question at random
                 askNextQuestion(); // recursive function call to self
@@ -181,10 +181,10 @@ $(document).ready( function(){
               ]
             });
         } else {
-          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have answered <b>all</b> the questions now.  Well done!<br /><br />A summary of the answers has been provided on the screen.</p></div>")
             .dialog({ 
               modal: true,
-              dialogClass: "no-show",
+              dialogClass: "no-show bg-correct",
               close: function( event, ui ){
                 // remove dialog popup from DOM
                 $(this).remove();    
@@ -294,6 +294,7 @@ $(document).ready( function(){
       $answer.on('click', function(ev){
         // logic to check if correct selection has been made
         const $answerID = $( this ).attr( 'id' );
+        const $member = $( this ).data( 'member' );
 
         if( $answerID == $("#drop-zone").data( 'id' ) ){        
           // fadeout/remove selected card after user reads prompt
@@ -306,11 +307,10 @@ $(document).ready( function(){
           $correctAnswerOnDesktopView.remove();
   
           // populate image and member name in Mobile view placeholder 
-          const $dropZone = $( "#drop-zone" );
-          const $member = $( this ).data( 'member' );
+          const $dropZone = $( "#drop-zone" );          
           const $image = $( this ).data( 'image' );
           $dropZone.find("#member").text( $member );
-          $dropZone.find("#image img").attr( 'src', $image );          
+          $dropZone.find("#image img").attr( 'src', $image );
 
           // Upon choosing correct answer:
           // animate screen to top, 
@@ -323,10 +323,10 @@ $(document).ready( function(){
             setTimeout( 
               function(){
                 if( questions.length > 0 ){
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questions.length +"</b> more question/s. Try the next one.</p></div>")
                     .dialog({ 
                       modal: true,
-                      dialogClass: "no-show",
+                      dialogClass: "no-show bg-correct",
                       close: function( event, ui ){                    
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -345,10 +345,10 @@ $(document).ready( function(){
                       ]
                     });                
                 } else {
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have answered <b>all</b> the questions now.  Well done!<br /><br />A summary of the answers has been provided on the screen.</p></div>")
                     .dialog({ 
                       modal: true,
-                      dialogClass: "no-show",
+                      dialogClass: "no-show bg-correct",
                       close: function( event, ui ){
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -371,10 +371,10 @@ $(document).ready( function(){
             );
           });
         } else {
-          $( "<div id='mobile-dialog'><p>That answer was incorrect.  Please try again.</p></div>")
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is incorrect. Please try again.</p></div>")
             .dialog({ 
               modal: true,
-              dialogClass: "no-show",
+              dialogClass: "no-show bg-incorrect",
               close: function( event, ui ){
                 $(this).remove();
                 $("#mobile-dialog").dialog('destroy');
