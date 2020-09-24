@@ -22,7 +22,7 @@ $(document).ready( function(){
 
   function generateQuestions( data ){
     // generate a random set of questions
-    let questionsList = [...data];
+    let questionsList = data.slice(); // IE 11 doesn't like syntax [...data]
     randomize( questionsList );
     return questionsList;
   }
@@ -440,7 +440,8 @@ $(document).ready( function(){
    * Event handlers
    */
   // if screen has resized, check screen width again
-  $(window).on('resize', () => {
+  // $(window).on('resize', () => { // Doesn't work in IE 11
+  $( window ).resize( function(){
     enableDesktopOrMobileAnswers();
   });
   
