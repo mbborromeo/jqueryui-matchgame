@@ -104,142 +104,157 @@ $(document).ready( function(){
     $("#summary-area").removeClass('hidden');
   }
 
+  function generateQuestionContent( question ){
+    let $questionDiv = $("<div></div>");
+    $questionDiv.attr('id', 'question');
+
+    // build column 1 of question
+    let $column1 = $("<div></div>");
+    $column1.addClass('column');
+    let $column1heading = $("<h2></h2>");
+    $column1heading.text("Priorities");
+    $column1.append( $column1heading );
+    if( question.priorities.length > 0 ){
+      let $column1list = $("<ul></ul>");
+
+      for( let i=0; i < question.priorities.length; i++ ){
+        let $listItem = $("<li></li>");
+        $listItem.text( question.priorities[i] );
+        $column1list.append( $listItem );
+      }
+      
+      $column1.append( $column1list );
+    }
+    //$questionDiv.empty();
+    $questionDiv.append( $column1 );
+
+    // build column 2 of question
+    let $column2 = $("<div></div>");
+    $column2.addClass('column');
+    let $column2heading = $("<h2></h2>");
+    $column2heading.text("Concerns and Challenges");
+    $column2.append( $column2heading );
+    if( question.concernsAndChallenges.length > 0 ){
+      let $column2list = $("<ul></ul>");
+
+      for( let j=0; j < question.concernsAndChallenges.length; j++ ){
+        let $listItem = $("<li></li>");
+        $listItem.text( question.concernsAndChallenges[j] );
+        $column2list.append( $listItem );
+      }
+      
+      $column2.append( $column2list );
+    }
+    $questionDiv.append( $column2 );
+
+    return $questionDiv;
+  }
+
+  // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
+  function generateDropZone( questionID ){    
+    const $dropZone = $("<div></div>");
+    $dropZone.attr( 'id', 'drop-zone' );
+    $dropZone.data( 'id', questionID );
+    $dropZone.droppable({
+      accept: function( draggable ){
+        return draggable.attr( 'id' ) == $( this ).data( 'id' );
+      },
+      drop: function( event, ui ){
+        let $member = ui.draggable.data( 'member' );
+        let $image = ui.draggable.data( 'image' );
+        $( this ).find("#member").text( $member );
+        $( this ).find("#image img").attr( 'src', $image );
+
+        // hide correct answer selected on Desktop view
+        ui.draggable.hide( "fade", function(){
+          $(this).remove();
+        });
+
+        // hide corresponding answer on Mobile view as well
+        let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
+        $correctAnswerOnMobile.remove();      
+
+        if( questions.length > 0 ){
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+            .dialog({ 
+              modal: true,
+              close: function( event, ui ){  
+                // choose next question at random
+                askNextQuestion(); // recursive function call to self
+
+                // remove dialog popup from DOM
+                $(this).remove();
+                $("#mobile-dialog").dialog('destroy');
+              },
+              buttons: [
+                {
+                  text: "OK",
+                  click: function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              ]
+            });
+        } else {
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
+            .dialog({ 
+              modal: true,
+              close: function( event, ui ){
+                // remove dialog popup from DOM
+                $(this).remove();    
+                $("#mobile-dialog").dialog('destroy');
+                
+                showSummary();
+              },
+              buttons: [
+                {
+                  text: "OK",
+                  click: function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              ]
+            });
+        }
+      }
+    });
+
+    // initialise title
+    // $dropZone.empty();
+    const $h3 = $("<h3></h3>");
+    $h3.attr( 'id', 'member' );
+    $h3.text( 'Who is this team member?' );      
+    $dropZone.append( $h3 );
+
+    // initialise placeholder image
+    const $imageWrapper = $("<div></div>");
+    $imageWrapper.attr( 'id', 'image' );
+    const $image = $("<img />");
+    $image.attr( 'src', './images/0_placeholder.png' );
+    // $imageWrapper.empty();
+    $imageWrapper.append( $image );
+    $dropZone.append( $imageWrapper );
+
+    return $dropZone;
+  }
+
   function askNextQuestion(){
+    const $questionArea = $("#question-area");
+    $questionArea.empty();
+
     let question = questions.pop();
   
-    if( question ){
-      // get question data from JSON object
-      const $questionArea = $("#question-area");
-      let $questionDiv = $("<div></div>");
-      $questionDiv.attr('id', 'question');
-  
-      // build column 1 of question
-      let $column1 = $("<div></div>");
-      $column1.addClass('column');
-      let $column1heading = $("<h2></h2>");
-      $column1heading.text("Priorities");
-      $column1.append( $column1heading );
-      if( question.priorities.length > 0 ){
-        let $column1list = $("<ul></ul>");
-  
-        for( let i=0; i < question.priorities.length; i++ ){
-          let $listItem = $("<li></li>");
-          $listItem.text( question.priorities[i] );
-          $column1list.append( $listItem );
-        }
-        
-        $column1.append( $column1list );
-      }
-      $questionDiv.empty();
-      $questionDiv.append( $column1 );
-  
-      // build column 2 of question
-      let $column2 = $("<div></div>");
-      $column2.addClass('column');
-      let $column2heading = $("<h2></h2>");
-      $column2heading.text("Concerns and Challenges");
-      $column2.append( $column2heading );
-      if( question.concernsAndChallenges.length > 0 ){
-        let $column2list = $("<ul></ul>");
-  
-        for( let j=0; j < question.concernsAndChallenges.length; j++ ){
-          let $listItem = $("<li></li>");
-          $listItem.text( question.concernsAndChallenges[j] );
-          $column2list.append( $listItem );
-        }
-        
-        $column2.append( $column2list );
-      }
-      $questionDiv.append( $column2 );
+    // extract question data from JSON object  
+    if( question ){          
+      const $qcontent = generateQuestionContent( question );
       
-      // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
-      const $dropZone = $("<div></div>");
-      $dropZone.attr( 'id', 'drop-zone' );
-      $dropZone.data( 'id', question.id );
-      $dropZone.droppable({
-        accept: function( draggable ){
-          return draggable.attr( 'id' ) == $( this ).data( 'id' );
-        },
-        drop: function( event, ui ){
-          let $member = ui.draggable.data( 'member' );
-          let $image = ui.draggable.data( 'image' );
-          $( this ).find("#member").text( $member );
-          $( this ).find("#image img").attr( 'src', $image );
-  
-          // hide correct answer selected on Desktop view
-          ui.draggable.hide( "fade", function(){
-            $(this).remove();
-          });
-  
-          // hide corresponding answer on Mobile view as well
-          let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
-          $correctAnswerOnMobile.remove();      
-  
-          if( questions.length > 0 ){
-            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){  
-                  // choose next question at random
-                  askNextQuestion(); // recursive function call to self
-
-                  // remove dialog popup from DOM
-                  $(this).remove();
-                  $("#mobile-dialog").dialog('destroy');
-                },
-                buttons: [
-                  {
-                    text: "OK",
-                    click: function() {
-                      $( this ).dialog( "close" );
-                    }
-                  }
-                ]
-              });
-          } else {
-            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){
-                  // remove dialog popup from DOM
-                  $(this).remove();    
-                  $("#mobile-dialog").dialog('destroy');
-                  
-                  showSummary();
-                },
-                buttons: [
-                  {
-                    text: "OK",
-                    click: function() {
-                      $( this ).dialog( "close" );
-                    }
-                  }
-                ]
-              });
-          }
-        }
-      });
-  
-      // initialise title
-      const $h3 = $("<h3></h3>");
-      $h3.attr( 'id', 'member' );
-      $h3.text( 'Who is this team member?' );
-      $dropZone.empty();
-      $dropZone.append( $h3 );
-  
-      // initialise placeholder image
-      const $imageWrapper = $("<div></div>");
-      $imageWrapper.attr( 'id', 'image' );
-      const $image = $("<img />");
-      $image.attr( 'src', './images/0_placeholder.png' );
-      $imageWrapper.empty();
-      $imageWrapper.append( $image );
-      $dropZone.append( $imageWrapper );
+      // drop zone corresponding to question 
+      // will be visible/used for both Mouse-pointer (desktop) and Touch-screen devices (mobile/tablet)
+      const $dzone = generateDropZone( question.id );
   
       // append drop zone and generated question to question area
-      $questionArea.empty();
-      $questionArea.append( $dropZone );
-      $questionArea.append( $questionDiv );
+      $questionArea.append( $dzone );
+      $questionArea.append( $qcontent );
     }
   }
 
