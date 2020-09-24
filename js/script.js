@@ -27,51 +27,6 @@ $(document).ready( function(){
     return questionsList;
   }
 
-  // Determine whether should use drag 'n' drop functionality for Mouse-pointer devices (Desktop), 
-  // or click selection functionality for Touch-screen devices (Mobile/Tablet).
-  // Reference: https://codepen.io/tteske/pen/KKwxOxp
-  // Determines if device is a touch-screen without relying on screen width.
-  // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
-  function enableDesktopOrMobileAnswers(){
-    if("ontouchstart" in document.documentElement){
-      // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
-      $("#answers").addClass( 'hidden' );
-      $("#answers-touch-screen").removeClass( 'hidden' );
-    } else {
-      // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
-      $("#answers-touch-screen").addClass( 'hidden' );
-      $("#answers").removeClass( 'hidden' );
-    }
-  }
-
-  function generateDesktopAnswers( data ){
-    for( let i = 0; i < data.length; i++ ){
-      let $answer = $("<div></div>");
-      $answer.attr( 'id', data[ i ].id );
-      $answer.data( 'member', data[ i ].teamMember );
-      $answer.data( 'image', data[ i ].image );
-
-      let $heading = $("<h3></h3>");
-      $heading.text( data[ i ].teamMember );
-
-      let $imgWrapper = $("<div></div>");
-      let $img = $("<img />");
-      $img.attr('src', data[ i ].image );
-
-      $imgWrapper.append( $img );
-      $answer.append( $heading );
-      $answer.append( $imgWrapper );
-
-      // add droppable functionality
-      $answer.draggable({ 
-        revert: "invalid", 
-        zIndex: 2
-      });
-
-      $answer.appendTo( "#answers" );
-    }
-  }
-
   function generateSummary(){
     for( let q=0; q < questions.length; q++ ){
       // build answer area
@@ -288,6 +243,34 @@ $(document).ready( function(){
     }
   }
 
+  function generateDesktopAnswers( data ){
+    for( let i = 0; i < data.length; i++ ){
+      let $answer = $("<div></div>");
+      $answer.attr( 'id', data[ i ].id );
+      $answer.data( 'member', data[ i ].teamMember );
+      $answer.data( 'image', data[ i ].image );
+
+      let $heading = $("<h3></h3>");
+      $heading.text( data[ i ].teamMember );
+
+      let $imgWrapper = $("<div></div>");
+      let $img = $("<img />");
+      $img.attr('src', data[ i ].image );
+
+      $imgWrapper.append( $img );
+      $answer.append( $heading );
+      $answer.append( $imgWrapper );
+
+      // add droppable functionality
+      $answer.draggable({ 
+        revert: "invalid", 
+        zIndex: 2
+      });
+
+      $answer.appendTo( "#answers" );
+    }
+  }
+
   function generateMobileTabletAnswers( data ){
     for( let i = 0; i < data.length; i++ ){
       let $answer = $("<div></div>");
@@ -405,6 +388,23 @@ $(document).ready( function(){
       });
   
       $answer.appendTo( "#answers-touch-screen" );
+    }
+  }
+
+  // Determine whether should use drag 'n' drop functionality for Mouse-pointer devices (Desktop), 
+  // or click selection functionality for Touch-screen devices (Mobile/Tablet).
+  // Reference: https://codepen.io/tteske/pen/KKwxOxp
+  // Determines if device is a touch-screen without relying on screen width.
+  // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
+  function enableDesktopOrMobileAnswers(){
+    if("ontouchstart" in document.documentElement){
+      // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
+      $("#answers").addClass( 'hidden' );
+      $("#answers-touch-screen").removeClass( 'hidden' );
+    } else {
+      // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
+      $("#answers-touch-screen").addClass( 'hidden' );
+      $("#answers").removeClass( 'hidden' );
     }
   }
 
