@@ -3,9 +3,13 @@ $(document).ready( function(){
   /*****************
    * Global variables
    */
-  var questions;
+  var originalData;
+  var questionsToAsk;
   const $summaryArea = $("#summary-area");
-  $summaryArea.addClass('hidden');
+  const $questionArea = $("#question-area");
+  const $instructions = $("#instructions");
+  const $answers = $("#answers");
+  const $answersTouchScreen = $("#answers-touch-screen");
 
 
   /************************
@@ -66,8 +70,12 @@ $(document).ready( function(){
   }
 
   function generateSummary(){
-    for( let q=0; q < questions.length; q++ ){
-      const question = questions[q];
+    // empty summary area in case quiz has been attempted before
+    $summaryArea.empty();
+    $summaryArea.addClass('hidden');
+
+    for( let q=0; q < questionsToAsk.length; q++ ){
+      const question = questionsToAsk[q];
 
       // build answer area
       const $summaryItem = $("<div></div>");
@@ -107,17 +115,27 @@ $(document).ready( function(){
       // append it to DOM, but make sure area is initially hidden
       $summaryArea.append( $summaryItem );
     }
+
+    // build and append Replay button
+    const $replayBtn = $("<button></button>");
+    $replayBtn.attr( 'id', 'replay-btn' );
+    $replayBtn.addClass('ui-button ui-widget ui-corner-all');
+    $replayBtn.text('Replay quiz');
+    $replayBtn.on( 'click', function(){
+      setUpQuiz();
+    });
+    $summaryArea.append( $replayBtn );
   }
 
   function showSummary(){
     // hide questions
-    $("#question-area").addClass('hidden');
-    $("#instructions").addClass('hidden');
-    $("#answers").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
-    $("#answers-touch-screen").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
+    $questionArea.addClass('hidden');
+    $instructions.addClass('hidden');
+    $answers.addClass('hidden') // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
+    $answersTouchScreen.addClass('hidden'); // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
 
     // display summary of questions with answers
-    $("#summary-area").removeClass('hidden');
+    $summaryArea.removeClass('hidden');
   }
 
   function generateQuestionContent( question ){
@@ -156,11 +174,11 @@ $(document).ready( function(){
         });
 
         // hide corresponding answer on Mobile view as well
-        let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
+        let $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
         $correctAnswerOnMobile.remove();      
 
-        if( questions.length > 0 ){
-          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questions.length +"</b> more question/s. Try the next one.</p></div>")
+        if( questionsToAsk.length > 0 ){
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questionsToAsk.length +"</b> more question/s. Try the next one.</p></div>")
             .dialog({ 
               modal: true,
               dialogClass: "no-show bg-correct",
@@ -225,11 +243,12 @@ $(document).ready( function(){
     return $dropZone;
   }
 
-  function askNextQuestion(){
-    const $questionArea = $("#question-area");
+  function askNextQuestion(){    
     $questionArea.empty();
+    $questionArea.removeClass('hidden');
 
-    let question = questions.pop();
+    // remove last item from questions array and return item
+    let question = questionsToAsk.pop();
   
     // extract question data from JSON object  
     if( question ){          
@@ -246,6 +265,10 @@ $(document).ready( function(){
   }
 
   function generateDesktopAnswers( data ){
+    // empty answers in case quiz has been attempted before
+    $answers.empty();
+    $answers.removeClass('hidden');
+
     for( let i = 0; i < data.length; i++ ){
       let $answer = $("<div></div>");
       $answer.attr( 'id', data[ i ].id );
@@ -274,6 +297,10 @@ $(document).ready( function(){
   }
 
   function generateMobileTabletAnswers( data ){
+    // empty answers in case quiz has been attempted before
+    $answersTouchScreen.empty();
+    $answersTouchScreen.removeClass('hidden');
+
     for( let i = 0; i < data.length; i++ ){
       let $answer = $("<div></div>");
       $answer.attr( 'id', data[ i ].id );
@@ -304,7 +331,7 @@ $(document).ready( function(){
           });
           
           // also remove selected card in Desktop view
-          let $correctAnswerOnDesktopView = $("#answers").children( "#" + $answerID );
+          let $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
           $correctAnswerOnDesktopView.remove();
   
           // populate image and member name in Mobile view placeholder 
@@ -323,8 +350,8 @@ $(document).ready( function(){
           $('html, body').animate( {scrollTop:0}, 600, function(){
             setTimeout( 
               function(){
-                if( questions.length > 0 ){
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questions.length +"</b> more question/s. Try the next one.</p></div>")
+                if( questionsToAsk.length > 0 ){
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questionsToAsk.length +"</b> more question/s. Try the next one.</p></div>")
                     .dialog({ 
                       modal: true,
                       dialogClass: "no-show bg-correct",
@@ -404,19 +431,46 @@ $(document).ready( function(){
   function enableDesktopOrMobileAnswers(){
     if("ontouchstart" in document.documentElement){
       // provide instructions for mobile/tablet touchscreen device
-      $("#instructions").html("<b><i>Click on</i></b> the team member below that matches the description above...");
+      $instructions.html("<b><i>Click on</i></b> the team member below that matches the description above...");
+      $instructions.removeClass('hidden');
 
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
-      $("#answers").addClass( 'hidden' );
-      $("#answers-touch-screen").removeClass( 'hidden' );
+      $answers.addClass( 'hidden' );
+      $answersTouchScreen.removeClass( 'hidden' );
     } else {
       // provide instructions for desktop mouse-pointer device
-      $("#instructions").html("<b><i>Drag and drop</i></b> the team member below that matches the description above...");
+      $instructions.html("<b><i>Drag and drop</i></b> the team member below that matches the description above...");
+      $instructions.removeClass('hidden');
 
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
-      $("#answers-touch-screen").addClass( 'hidden' );
-      $("#answers").removeClass( 'hidden' );
+      $answersTouchScreen.addClass( 'hidden' );
+      $answers.removeClass( 'hidden' );
     }
+  }
+
+  function setUpQuiz(){
+    // empty summary and hide it
+    $("#summary-area").empty();
+    $("#summary-area").addClass('hidden');
+
+    // make sure user is at top of page
+    $('html, body').scrollTop(0);
+
+    // generate question and drop zone area
+    questionsToAsk = arrangeQuestions( originalData );
+
+    // generate Q & A summary, but it is initially hidden from view
+    generateSummary();
+
+    // choose a question to ask user
+    askNextQuestion();
+
+    // generate both draggable and clickable answers once
+    generateDesktopAnswers( originalData );
+    generateMobileTabletAnswers( originalData );
+    
+    // initial screen width check to determine whether to show draggable or clickable answers
+    enableDesktopOrMobileAnswers();
   }
 
 
@@ -426,21 +480,9 @@ $(document).ready( function(){
   // extract Q & A data from JSON file
   $.getJSON( "perceptions.json", function( data, status ){
     if( status==="success" ){
-      // generate question and drop zone area
-      questions = arrangeQuestions( data );
+      originalData = data;
 
-      // generate Q & A summary, but it is initially hidden from view
-      generateSummary();
-
-      // choose a question to ask user
-      askNextQuestion();
-
-      // generate both draggable and clickable answers once
-      generateDesktopAnswers( data );
-      generateMobileTabletAnswers( data );
-      
-      // initial screen width check to determine whether to show draggable or clickable answers
-      enableDesktopOrMobileAnswers();
+      setUpQuiz();
     } else {
       console.error('There was an error loading the JSON file')
     }
