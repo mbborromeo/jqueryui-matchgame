@@ -404,14 +404,14 @@ $(document).ready( function(){
   function enableDesktopOrMobileAnswers(){
     if("ontouchstart" in document.documentElement){
       // provide instructions for mobile/tablet touchscreen device
-      $("#instructions").text("Click on the team member below that matches the description above...");
+      $("#instructions").html("<b><i>Click on</i></b> the team member below that matches the description above...");
 
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
       $("#answers").addClass( 'hidden' );
       $("#answers-touch-screen").removeClass( 'hidden' );
     } else {
       // provide instructions for desktop mouse-pointer device
-      $("#instructions").text("Drag and drop the team member below that matches the description above...");
+      $("#instructions").html("<b><i>Drag and drop</i></b> the team member below that matches the description above...");
 
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
       $("#answers-touch-screen").addClass( 'hidden' );
