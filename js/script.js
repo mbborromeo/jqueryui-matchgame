@@ -112,6 +112,7 @@ $(document).ready( function(){
   function showSummary(){
     // hide questions
     $("#question-area").addClass('hidden');
+    $("#instructions").addClass('hidden');
     $("#answers").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
     $("#answers-touch-screen").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
 
@@ -402,10 +403,16 @@ $(document).ready( function(){
   // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
   function enableDesktopOrMobileAnswers(){
     if("ontouchstart" in document.documentElement){
+      // provide instructions for mobile/tablet touchscreen device
+      $("#instructions").text("Click on the team member below that matches the description above...");
+
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
       $("#answers").addClass( 'hidden' );
       $("#answers-touch-screen").removeClass( 'hidden' );
     } else {
+      // provide instructions for desktop mouse-pointer device
+      $("#instructions").text("Drag and drop the team member below that matches the description above...");
+
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
       $("#answers-touch-screen").addClass( 'hidden' );
       $("#answers").removeClass( 'hidden' );
