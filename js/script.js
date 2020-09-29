@@ -112,8 +112,8 @@ $(document).ready( function(){
   function showSummary(){
     // hide questions
     $("#question-area").addClass('hidden');
-    $("#answers").addClass('hidden');
-    $("#answers-touch-screen").addClass('hidden');
+    $("#answers").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
+    $("#answers-touch-screen").css({ "display": "none" }); // override CSS logic from enableDesktopOrMobileAnswers()
 
     // display summary of questions with answers
     $("#summary-area").removeClass('hidden');

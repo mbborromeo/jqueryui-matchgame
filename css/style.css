@@ -167,7 +167,6 @@ body {
 #summary-area.hidden,
 #question-area.hidden {
   display: none;
-  padding: 0;
 }
 
 /* Dialog box customisation */
