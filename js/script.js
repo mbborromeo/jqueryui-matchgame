@@ -428,16 +428,16 @@ $(document).ready( function(){
   // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
   function enableDesktopOrMobileAnswers(){
     if("ontouchstart" in document.documentElement){
-      // provide instructions for mobile/tablet touchscreen device
-      $instructions.html("<b><i>Click on</i></b> the team member below that matches the description above...");
+      // instructions for mobile/tablet touchscreen device
+      $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
       $instructions.removeClass('hidden');
 
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
       $answers.addClass( 'hidden' );
       $answersTouchScreen.removeClass( 'hidden' );
     } else {
-      // provide instructions for desktop mouse-pointer device
-      $instructions.html("<b><i>Drag and drop</i></b> the team member below that matches the description above...");
+      // instructions for desktop mouse-pointer device
+      $instructions.html("<b><i>Drag</i></b> the corresponding team member of the description above onto the blank face...");
       $instructions.removeClass('hidden');
 
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
