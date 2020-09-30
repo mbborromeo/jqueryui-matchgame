@@ -3,9 +3,13 @@ $(document).ready( function(){
   /*****************
    * Global variables
    */
-  var questions;
+  var originalData;
+  var questionsToAsk;
   const $summaryArea = $("#summary-area");
-  $summaryArea.addClass('hidden');
+  const $questionArea = $("#question-area");
+  const $instructions = $("#instructions");
+  const $answers = $("#answers");
+  const $answersTouchScreen = $("#answers-touch-screen");
 
 
   /************************
@@ -20,15 +24,59 @@ $(document).ready( function(){
     });
   };
 
-  function generateQuestions( data ){
+  function arrangeQuestions(){
     // generate a random set of questions
-    let questionsList = [...data];
+    let questionsList = originalData.slice(); // IE 11 doesn't like syntax [...data]
     randomize( questionsList );
     return questionsList;
   }
 
+  function generateMemberPriorities( question ){
+    const $column1 = $("<div></div>");
+    $column1.addClass('column');
+
+    const $column1Heading = $("<h2></h2>");
+    $column1Heading.text( 'Priorities' );
+    $column1.append( $column1Heading );
+
+    const $column1List = $("<ul></ul>");
+    for( let p=0; p < question.priorities.length; p++ ){
+      const $listItem = $("<li></li>");
+      $listItem.text( question.priorities[p] );
+      $column1List.append( $listItem );
+    }
+    $column1.append( $column1List );
+
+    return $column1;
+  }
+
+  function generateMemberConcerns( question ){
+    const $column2 = $("<div></div>");
+    $column2.addClass('column');
+
+    const $column2Heading = $("<h2></h2>");
+    $column2Heading.text( 'Concerns and Challenges' );
+    $column2.append( $column2Heading );
+
+    const $column2List = $("<ul></ul>");
+    for( let c=0; c < question.concernsAndChallenges.length; c++ ){
+      const $listItem = $("<li></li>");
+      $listItem.text( question.concernsAndChallenges[c] );
+      $column2List.append( $listItem );
+    }
+    $column2.append( $column2List );
+
+    return $column2;
+  }
+
   function generateSummary(){
-    for( let q=0; q < questions.length; q++ ){
+    // empty summary area in case quiz has been attempted before
+    $summaryArea.empty();
+    $summaryArea.addClass('hidden');
+
+    for( let q=0; q < questionsToAsk.length; q++ ){
+      const question = questionsToAsk[q];
+
       // build answer area
       const $summaryItem = $("<div></div>");
       $summaryItem.addClass('summary-item');
@@ -37,225 +85,200 @@ $(document).ready( function(){
       $answer.addClass('answer');
 
       const $h3 = $("<h3></h3>");
-      $h3.text( questions[q].teamMember );
+      $h3.text( question.teamMember );
       $answer.append( $h3 );
 
       const $imageWrapper = $("<div></div");
       $imageWrapper.addClass('image');
       const $image = $("<img />");
-      $image.attr( 'src', questions[q].image );
+      $image.attr( 'src', question.image );
       $imageWrapper.append( $image );
       $answer.append( $imageWrapper );
 
       $summaryItem.append( $answer );
 
       // build question columns
-      const $question = $("<div></div>");
-      $question.addClass('question');
+      const $questionDiv = $("<div></div>");
+      $questionDiv.addClass('question');
 
       // build 1st column
-      const $column1 = $("<div></div>");
-      $column1.addClass('column');
-
-      const $column1Heading = $("<h2></h2>");
-      $column1Heading.text( 'Priorities' );
-      $column1.append( $column1Heading );
-
-      const $column1List = $("<ul></ul>");
-      for( let p=0; p < questions[q].priorities.length; p++ ){
-        const $listItem = $("<li></li>");
-        $listItem.text( questions[q].priorities[p] );
-        $column1List.append( $listItem );
-      }
-      $column1.append( $column1List );
-      $question.append( $column1 );
+      const $column1 = generateMemberPriorities( question );      
+      $questionDiv.append( $column1 );
 
       // build 2nd column
-      const $column2 = $("<div></div>");
-      $column2.addClass('column');
+      const $column2 = generateMemberConcerns( question );
+      $questionDiv.append( $column2 );
 
-      const $column2Heading = $("<h2></h2>");
-      $column2Heading.text( 'Concerns and Challenges' );
-      $column2.append( $column2Heading );
-
-      const $column2List = $("<ul></ul>");
-      for( let c=0; c < questions[q].concernsAndChallenges.length; c++ ){
-        const $listItem = $("<li></li>");
-        $listItem.text( questions[q].concernsAndChallenges[c] );
-        $column2List.append( $listItem );
-      }
-      $column2.append( $column2List );
-      $question.append( $column2 );
-
-      $summaryItem.append( $question );
+      // append Question to DOM
+      $summaryItem.append( $questionDiv );
 
       // append it to DOM, but make sure area is initially hidden
       $summaryArea.append( $summaryItem );
     }
+
+    // build and append Replay button
+    const $replayBtn = $("<button></button>");
+    $replayBtn.attr( 'id', 'replay-btn' );
+    $replayBtn.addClass('ui-button ui-widget ui-corner-all');
+    $replayBtn.text('Replay quiz');
+    $replayBtn.on( 'click', function(){
+      setUpQuiz();
+    });
+    $summaryArea.append( $replayBtn );
   }
 
   function showSummary(){
     // hide questions
-    $("#question-area").addClass('hidden');
-    $("#answers").addClass('hidden');
-    $("#answers-touch-screen").addClass('hidden');
+    $questionArea.addClass('hidden');
+    $instructions.addClass('hidden');
+    $answers.addClass('hidden') // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
+    $answersTouchScreen.addClass('hidden'); // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
 
     // display summary of questions with answers
-    $("#summary-area").removeClass('hidden');
+    $summaryArea.removeClass('hidden');
   }
 
-  function askNextQuestion(){
-    let question = questions.pop();
-  
-    if( question ){
-      // get question data from JSON object
-      const $questionArea = $("#question-area");
-      let $questionDiv = $("<div></div>");
-      $questionDiv.attr('id', 'question');
-  
-      // build column 1 of question
-      let $column1 = $("<div></div>");
-      $column1.addClass('column');
-      let $column1heading = $("<h2></h2>");
-      $column1heading.text("Priorities");
-      $column1.append( $column1heading );
-      if( question.priorities.length > 0 ){
-        let $column1list = $("<ul></ul>");
-  
-        for( let i=0; i < question.priorities.length; i++ ){
-          let $listItem = $("<li></li>");
-          $listItem.text( question.priorities[i] );
-          $column1list.append( $listItem );
-        }
-        
-        $column1.append( $column1list );
-      }
-      $questionDiv.empty();
-      $questionDiv.append( $column1 );
-  
-      // build column 2 of question
-      let $column2 = $("<div></div>");
-      $column2.addClass('column');
-      let $column2heading = $("<h2></h2>");
-      $column2heading.text("Concerns and Challenges");
-      $column2.append( $column2heading );
-      if( question.concernsAndChallenges.length > 0 ){
-        let $column2list = $("<ul></ul>");
-  
-        for( let j=0; j < question.concernsAndChallenges.length; j++ ){
-          let $listItem = $("<li></li>");
-          $listItem.text( question.concernsAndChallenges[j] );
-          $column2list.append( $listItem );
-        }
-        
-        $column2.append( $column2list );
-      }
-      $questionDiv.append( $column2 );
-      
-      // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
-      const $dropZone = $("<div></div>");
-      $dropZone.attr( 'id', 'drop-zone' );
-      $dropZone.data( 'id', question.id );
-      $dropZone.droppable({
-        accept: function( draggable ){
-          return draggable.attr( 'id' ) == $( this ).data( 'id' );
-        },
-        drop: function( event, ui ){
-          let $member = ui.draggable.data( 'member' );
-          let $image = ui.draggable.data( 'image' );
-          $( this ).find("#member").text( $member );
-          $( this ).find("#image img").attr( 'src', $image );
-  
-          // hide correct answer selected on Desktop view
-          ui.draggable.hide( "fade", function(){
-            $(this).remove();
-          });
-  
-          // hide corresponding answer on Mobile view as well
-          let $correctAnswerOnMobile = $("#answers-touch-screen").children( "#" + ui.draggable.attr('id') );
-          $correctAnswerOnMobile.remove();      
-  
-          if( questions.length > 0 ){
-            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){  
-                  // choose next question at random
-                  askNextQuestion(); // recursive function call to self
+  function generateQuestionContent( question ){
+    let $questionDiv = $("<div></div>");
+    $questionDiv.attr('id', 'question');
 
-                  // remove dialog popup from DOM
-                  $(this).remove();
-                  $("#mobile-dialog").dialog('destroy');
-                },
-                buttons: [
-                  {
-                    text: "OK",
-                    click: function() {
-                      $( this ).dialog( "close" );
-                    }
+    // build column 1 of question
+    const $column1 = generateMemberPriorities( question ); 
+    $questionDiv.append( $column1 );
+
+    // build column 2 of question
+    const $column2 = generateMemberConcerns( question );
+    $questionDiv.append( $column2 );
+
+    return $questionDiv;
+  }
+
+  // define drop zone corresponding to question for Mouse-pointer devices, ie. Desktop view
+  function generateAnswerDropZone( questionID ){    
+    const $dropZone = $("<div></div>");
+    $dropZone.attr( 'id', 'drop-zone' );
+    $dropZone.data( 'id', questionID );
+    $dropZone.droppable({
+      accept: function( draggable ){
+        return draggable.attr( 'id' ) == $( this ).data( 'id' );
+      },
+      drop: function( event, ui ){
+        let $member = ui.draggable.data( 'member' );
+        let $image = ui.draggable.data( 'image' );
+        $( this ).find("#member").text( $member );
+        $( this ).find("#image img").attr( 'src', $image );
+
+        // hide correct answer selected on Desktop view
+        ui.draggable.hide( "fade", function(){
+          $(this).remove();
+        });
+
+        // hide corresponding answer on Mobile view as well
+        let $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
+        $correctAnswerOnMobile.remove();      
+
+        if( questionsToAsk.length > 0 ){
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questionsToAsk.length +"</b> more question/s. Try the next one.</p></div>")
+            .dialog({ 
+              modal: true,
+              dialogClass: "no-show bg-correct",
+              close: function( event, ui ){  
+                // choose next question at random
+                askNextQuestion(); // recursive function call to self
+
+                // remove dialog popup from DOM
+                $(this).remove();
+                $("#mobile-dialog").dialog('destroy');
+              },
+              buttons: [
+                {
+                  text: "OK",
+                  click: function() {
+                    $( this ).dialog( "close" );
                   }
-                ]
-              });
-          } else {
-            $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
-              .dialog({ 
-                modal: true,
-                close: function( event, ui ){
-                  // remove dialog popup from DOM
-                  $(this).remove();    
-                  $("#mobile-dialog").dialog('destroy');
-                  
-                  showSummary();
-                },
-                buttons: [
-                  {
-                    text: "OK",
-                    click: function() {
-                      $( this ).dialog( "close" );
-                    }
+                }
+              ]
+            });
+        } else {
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have answered <b>all</b> the questions now.  Well done!<br /><br />A summary of the answers has been provided on the screen.</p></div>")
+            .dialog({ 
+              modal: true,
+              dialogClass: "no-show bg-correct",
+              close: function( event, ui ){
+                // remove dialog popup from DOM
+                $(this).remove();    
+                $("#mobile-dialog").dialog('destroy');
+                
+                showSummary();
+              },
+              buttons: [
+                {
+                  text: "OK",
+                  click: function() {
+                    $( this ).dialog( "close" );
                   }
-                ]
-              });
-          }
+                }
+              ]
+            });
         }
-      });
+      }
+    });
+
+    // initialise title
+    const $h3 = $("<h3></h3>");
+    $h3.attr( 'id', 'member' );
+    $h3.text( 'Who is this team member?' );      
+    $dropZone.append( $h3 );
+
+    // initialise placeholder image
+    const $imageWrapper = $("<div></div>");
+    $imageWrapper.attr( 'id', 'image' );
+    const $image = $("<img />");
+    $image.attr( 'src', './images/0_placeholder.png' );
+    $imageWrapper.append( $image );
+    $dropZone.append( $imageWrapper );
+
+    return $dropZone;
+  }
+
+  function askNextQuestion(){    
+    $questionArea.empty();
+    $questionArea.removeClass('hidden');
+
+    // remove last item from questions array and return item
+    let question = questionsToAsk.pop();
   
-      // initialise title
-      const $h3 = $("<h3></h3>");
-      $h3.attr( 'id', 'member' );
-      $h3.text( 'Team member?' );
-      $dropZone.empty();
-      $dropZone.append( $h3 );
-  
-      // initialise placeholder image
-      const $imageWrapper = $("<div></div>");
-      $imageWrapper.attr( 'id', 'image' );
-      const $image = $("<img />");
-      $image.attr( 'src', './images/0_placeholder.png' );
-      $imageWrapper.empty();
-      $imageWrapper.append( $image );
-      $dropZone.append( $imageWrapper );
+    // extract question data from JSON object  
+    if( question ){          
+      const $qcontent = generateQuestionContent( question );
+      
+      // drop zone corresponding to question 
+      // will be visible/used for both Mouse-pointer (desktop) and Touch-screen devices (mobile/tablet)
+      const $dzone = generateAnswerDropZone( question.id );
   
       // append drop zone and generated question to question area
-      $questionArea.empty();
-      $questionArea.append( $dropZone );
-      $questionArea.append( $questionDiv );
+      $questionArea.append( $dzone );
+      $questionArea.append( $qcontent );
     }
   }
 
-  function generateDesktopAnswers( data ){
-    for( let i = 0; i < data.length; i++ ){
+  function generateDesktopAnswers(){
+    // empty answers in case quiz has been attempted before
+    $answers.empty();
+    $answers.removeClass('hidden');
+
+    for( let i = 0; i < originalData.length; i++ ){
       let $answer = $("<div></div>");
-      $answer.attr( 'id', data[ i ].id );
-      $answer.data( 'member', data[ i ].teamMember );
-      $answer.data( 'image', data[ i ].image );
+      $answer.attr( 'id', originalData[ i ].id );
+      $answer.data( 'member', originalData[ i ].teamMember );
+      $answer.data( 'image', originalData[ i ].image );
 
       let $heading = $("<h3></h3>");
-      $heading.text( data[ i ].teamMember );
+      $heading.text( originalData[ i ].teamMember );
 
       let $imgWrapper = $("<div></div>");
       let $img = $("<img />");
-      $img.attr('src', data[ i ].image );
+      $img.attr('src', originalData[ i ].image );
 
       $imgWrapper.append( $img );
       $answer.append( $heading );
@@ -271,19 +294,23 @@ $(document).ready( function(){
     }
   }
 
-  function generateMobileTabletAnswers( data ){
-    for( let i = 0; i < data.length; i++ ){
+  function generateMobileTabletAnswers(){
+    // empty answers in case quiz has been attempted before
+    $answersTouchScreen.empty();
+    $answersTouchScreen.removeClass('hidden');
+
+    for( let i = 0; i < originalData.length; i++ ){
       let $answer = $("<div></div>");
-      $answer.attr( 'id', data[ i ].id );
-      $answer.data( 'member', data[ i ].teamMember );
-      $answer.data( 'image', data[ i ].image );
+      $answer.attr( 'id', originalData[ i ].id );
+      $answer.data( 'member', originalData[ i ].teamMember );
+      $answer.data( 'image', originalData[ i ].image );
   
       let $heading = $("<h3></h3>");
-      $heading.text( data[ i ].teamMember );
+      $heading.text( originalData[ i ].teamMember );
   
       let $imgWrapper = $("<div></div>");
       let $img = $("<img />");
-      $img.attr('src', data[ i ].image );
+      $img.attr('src', originalData[ i ].image );
   
       $imgWrapper.append( $img );
       $answer.append( $heading );
@@ -293,6 +320,7 @@ $(document).ready( function(){
       $answer.on('click', function(ev){
         // logic to check if correct selection has been made
         const $answerID = $( this ).attr( 'id' );
+        const $member = $( this ).data( 'member' );
 
         if( $answerID == $("#drop-zone").data( 'id' ) ){        
           // fadeout/remove selected card after user reads prompt
@@ -301,15 +329,14 @@ $(document).ready( function(){
           });
           
           // also remove selected card in Desktop view
-          let $correctAnswerOnDesktopView = $("#answers").children( "#" + $answerID );
+          let $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
           $correctAnswerOnDesktopView.remove();
   
           // populate image and member name in Mobile view placeholder 
-          const $dropZone = $( "#drop-zone" );
-          const $member = $( this ).data( 'member' );
+          const $dropZone = $( "#drop-zone" );          
           const $image = $( this ).data( 'image' );
           $dropZone.find("#member").text( $member );
-          $dropZone.find("#image img").attr( 'src', $image );          
+          $dropZone.find("#image img").attr( 'src', $image );
 
           // Upon choosing correct answer:
           // animate screen to top, 
@@ -321,10 +348,11 @@ $(document).ready( function(){
           $('html, body').animate( {scrollTop:0}, 600, function(){
             setTimeout( 
               function(){
-                if( questions.length > 0 ){
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have "+ questions.length +" more question/s. Try the next one.</p></div>")
+                if( questionsToAsk.length > 0 ){
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have <b>"+ questionsToAsk.length +"</b> more question/s. Try the next one.</p></div>")
                     .dialog({ 
                       modal: true,
+                      dialogClass: "no-show bg-correct",
                       close: function( event, ui ){                    
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -343,9 +371,10 @@ $(document).ready( function(){
                       ]
                     });                
                 } else {
-                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct! You have answered all the questions now.  Well done!  A summary of the answers has been provided on the screen.</p></div>")
+                  $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is correct!<br /><br />You have answered <b>all</b> the questions now.  Well done!<br /><br />A summary of the answers has been provided on the screen.</p></div>")
                     .dialog({ 
                       modal: true,
+                      dialogClass: "no-show bg-correct",
                       close: function( event, ui ){
                         // remove dialog popup from DOM
                         $(this).remove();
@@ -368,9 +397,10 @@ $(document).ready( function(){
             );
           });
         } else {
-          $( "<div id='mobile-dialog'><p>That answer was incorrect.  Please try again.</p></div>")
+          $( "<div id='mobile-dialog'><p><b>"+ $member +"</b> is incorrect. Please try again.</p></div>")
             .dialog({ 
               modal: true,
+              dialogClass: "no-show bg-incorrect",
               close: function( event, ui ){
                 $(this).remove();
                 $("#mobile-dialog").dialog('destroy');
@@ -398,38 +428,59 @@ $(document).ready( function(){
   // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
   function enableDesktopOrMobileAnswers(){
     if("ontouchstart" in document.documentElement){
+      // instructions for mobile/tablet touchscreen device
+      $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
+      $instructions.removeClass('hidden');
+
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
-      $("#answers").addClass( 'hidden' );
-      $("#answers-touch-screen").removeClass( 'hidden' );
+      $answers.addClass( 'hidden' );
+      $answersTouchScreen.removeClass( 'hidden' );
     } else {
+      // instructions for desktop mouse-pointer device
+      $instructions.html("<b><i>Drag</i></b> the corresponding team member of the description above onto the blank face...");
+      $instructions.removeClass('hidden');
+
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
-      $("#answers-touch-screen").addClass( 'hidden' );
-      $("#answers").removeClass( 'hidden' );
+      $answersTouchScreen.addClass( 'hidden' );
+      $answers.removeClass( 'hidden' );
     }
   }
 
+  function setUpQuiz(){
+    // empty summary and hide it
+    $summaryArea.empty();
+    $summaryArea.addClass('hidden');
 
-  /******************
-   * Main code logic
+    // make sure user is at top of page
+    $('html, body').scrollTop(0);
+
+    // generate question and drop zone area
+    questionsToAsk = arrangeQuestions();
+
+    // generate Q & A summary, but it is initially hidden from view
+    generateSummary();
+
+    // choose a question to ask user
+    askNextQuestion();
+
+    // generate both draggable and clickable answers once
+    generateDesktopAnswers();
+    generateMobileTabletAnswers();
+    
+    // initial screen width check to determine whether to show draggable or clickable answers
+    enableDesktopOrMobileAnswers();
+  }
+
+
+  /*******************
+   * Code starts here
    */
   // extract Q & A data from JSON file
   $.getJSON( "perceptions.json", function( data, status ){
     if( status==="success" ){
-      // generate question and drop zone area
-      questions = generateQuestions( data );
+      originalData = data;
 
-      // generate Q & A summary, but it is initially hidden from view
-      generateSummary();
-
-      // choose a question to ask user
-      askNextQuestion();
-
-      // generate both draggable and clickable answers once
-      generateDesktopAnswers( data );
-      generateMobileTabletAnswers( data );
-      
-      // initial screen width check to determine whether to show draggable or clickable answers
-      enableDesktopOrMobileAnswers();
+      setUpQuiz();
     } else {
       console.error('There was an error loading the JSON file')
     }
@@ -440,7 +491,8 @@ $(document).ready( function(){
    * Event handlers
    */
   // if screen has resized, check screen width again
-  $(window).on('resize', () => {
+  // $(window).on('resize', () => { // Doesn't work in IE 11
+  $( window ).resize( function(){
     enableDesktopOrMobileAnswers();
   });
   

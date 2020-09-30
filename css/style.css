@@ -17,8 +17,21 @@ body {
 #question-area, 
 #answers,
 #answers-touch-screen,
-.summary-item {
+.summary-item,
+#instructions {
   padding: 10px;
+}
+
+#instructions {
+  position: relative;
+
+  margin-top: 10px;
+  background-color: #FFF;
+}
+
+#answers,
+#answers-touch-screen {
+  padding-bottom: 0;
 }
 
 .summary-item {
@@ -92,24 +105,27 @@ body {
 .summary-item > .answer {
   background-color: white;
   border: 3px solid #004E73;
-  border-radius: 8px;  
-  min-height: 290px;  
+  border-radius: 8px;
 }
 
 #answers > div, 
 #answers-touch-screen > div { 
   flex: 0 1 23%;
   margin-right: 1%; 
-  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
-#answers > div:active, 
-#answers-touch-screen > div:active { 
+#answers > div:active,
+#answers > div:focus,
+#answers-touch-screen > div:active,
+#answers-touch-screen > div:focus { 
   border: 3px solid #FFF200;
 }
 
 #answers > div:active h3, 
-#answers-touch-screen > div:active h3 { 
+#answers > div:focus h3
+#answers-touch-screen > div:active h3,
+#answers-touch-screen > div:focus h3 { 
   background-color: #FFF200;
 }
 
@@ -125,7 +141,7 @@ body {
   display: block;
   height: 38px;
   border-radius: 4px;
-  padding: 16px 0;
+  padding: 16px 14px;
   margin: 0;
   font-size: 16px;
   font-weight: 600;
@@ -161,9 +177,35 @@ body {
 #answers.hidden,
 #answers-touch-screen.hidden,
 #summary-area.hidden,
-#question-area.hidden {
+#question-area.hidden,
+#instructions.hidden {
   display: none;
-  padding: 0;
+}
+
+#replay-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 0;
+}
+
+/* Dialog box customisation */
+.no-show .ui-dialog-titlebar-close,
+.no-show .ui-dialog-titlebar {
+  display: none;
+}
+
+.bg-correct.ui-widget-content {
+  background: lawngreen; /* #FFF200 */
+}
+
+.bg-incorrect.ui-widget-content {
+  background: coral;
+}
+
+.bg-correct .ui-widget-content,
+.bg-incorrect .ui-widget-content
+ {
+  background: none;
 }
 
 /* jQuery UI overrides */
@@ -193,6 +235,12 @@ body {
     margin-bottom: 14px;
   }
 
+  /*
+  #question-area > div#drop-zone > div {
+    display: none;
+  }
+  */
+
   #question,
   .summary-item > .question {
     display: block;
@@ -217,7 +265,16 @@ body {
   }
   
   #answers-touch-screen > div {
-    margin-top: 4%;
+    margin-bottom: 4%;
     margin-right: 0;    
+  }
+
+  #instructions {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    padding-bottom: 10px;
   }
 }
