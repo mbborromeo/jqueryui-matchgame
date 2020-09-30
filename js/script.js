@@ -24,9 +24,9 @@ $(document).ready( function(){
     });
   };
 
-  function arrangeQuestions( data ){
+  function arrangeQuestions(){
     // generate a random set of questions
-    let questionsList = data.slice(); // IE 11 doesn't like syntax [...data]
+    let questionsList = originalData.slice(); // IE 11 doesn't like syntax [...data]
     randomize( questionsList );
     return questionsList;
   }
@@ -262,23 +262,23 @@ $(document).ready( function(){
     }
   }
 
-  function generateDesktopAnswers( data ){
+  function generateDesktopAnswers(){
     // empty answers in case quiz has been attempted before
     $answers.empty();
     $answers.removeClass('hidden');
 
-    for( let i = 0; i < data.length; i++ ){
+    for( let i = 0; i < originalData.length; i++ ){
       let $answer = $("<div></div>");
-      $answer.attr( 'id', data[ i ].id );
-      $answer.data( 'member', data[ i ].teamMember );
-      $answer.data( 'image', data[ i ].image );
+      $answer.attr( 'id', originalData[ i ].id );
+      $answer.data( 'member', originalData[ i ].teamMember );
+      $answer.data( 'image', originalData[ i ].image );
 
       let $heading = $("<h3></h3>");
-      $heading.text( data[ i ].teamMember );
+      $heading.text( originalData[ i ].teamMember );
 
       let $imgWrapper = $("<div></div>");
       let $img = $("<img />");
-      $img.attr('src', data[ i ].image );
+      $img.attr('src', originalData[ i ].image );
 
       $imgWrapper.append( $img );
       $answer.append( $heading );
@@ -294,23 +294,23 @@ $(document).ready( function(){
     }
   }
 
-  function generateMobileTabletAnswers( data ){
+  function generateMobileTabletAnswers(){
     // empty answers in case quiz has been attempted before
     $answersTouchScreen.empty();
     $answersTouchScreen.removeClass('hidden');
 
-    for( let i = 0; i < data.length; i++ ){
+    for( let i = 0; i < originalData.length; i++ ){
       let $answer = $("<div></div>");
-      $answer.attr( 'id', data[ i ].id );
-      $answer.data( 'member', data[ i ].teamMember );
-      $answer.data( 'image', data[ i ].image );
+      $answer.attr( 'id', originalData[ i ].id );
+      $answer.data( 'member', originalData[ i ].teamMember );
+      $answer.data( 'image', originalData[ i ].image );
   
       let $heading = $("<h3></h3>");
-      $heading.text( data[ i ].teamMember );
+      $heading.text( originalData[ i ].teamMember );
   
       let $imgWrapper = $("<div></div>");
       let $img = $("<img />");
-      $img.attr('src', data[ i ].image );
+      $img.attr('src', originalData[ i ].image );
   
       $imgWrapper.append( $img );
       $answer.append( $heading );
@@ -455,7 +455,7 @@ $(document).ready( function(){
     $('html, body').scrollTop(0);
 
     // generate question and drop zone area
-    questionsToAsk = arrangeQuestions( originalData );
+    questionsToAsk = arrangeQuestions();
 
     // generate Q & A summary, but it is initially hidden from view
     generateSummary();
@@ -464,8 +464,8 @@ $(document).ready( function(){
     askNextQuestion();
 
     // generate both draggable and clickable answers once
-    generateDesktopAnswers( originalData );
-    generateMobileTabletAnswers( originalData );
+    generateDesktopAnswers();
+    generateMobileTabletAnswers();
     
     // initial screen width check to determine whether to show draggable or clickable answers
     enableDesktopOrMobileAnswers();
