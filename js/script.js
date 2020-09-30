@@ -225,7 +225,6 @@ $(document).ready( function(){
     });
 
     // initialise title
-    // $dropZone.empty();
     const $h3 = $("<h3></h3>");
     $h3.attr( 'id', 'member' );
     $h3.text( 'Who is this team member?' );      
@@ -236,7 +235,6 @@ $(document).ready( function(){
     $imageWrapper.attr( 'id', 'image' );
     const $image = $("<img />");
     $image.attr( 'src', './images/0_placeholder.png' );
-    // $imageWrapper.empty();
     $imageWrapper.append( $image );
     $dropZone.append( $imageWrapper );
 
@@ -450,8 +448,8 @@ $(document).ready( function(){
 
   function setUpQuiz(){
     // empty summary and hide it
-    $("#summary-area").empty();
-    $("#summary-area").addClass('hidden');
+    $summaryArea.empty();
+    $summaryArea.addClass('hidden');
 
     // make sure user is at top of page
     $('html, body').scrollTop(0);
