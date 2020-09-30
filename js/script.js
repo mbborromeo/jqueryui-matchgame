@@ -472,8 +472,8 @@ $(document).ready( function(){
   }
 
 
-  /******************
-   * Main code logic
+  /*******************
+   * Code starts here
    */
   // extract Q & A data from JSON file
   $.getJSON( "perceptions.json", function( data, status ){
