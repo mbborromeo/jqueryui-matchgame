@@ -105,8 +105,7 @@ body {
 .summary-item > .answer {
   background-color: white;
   border: 3px solid #004E73;
-  border-radius: 8px;  
-  min-height: 290px;  
+  border-radius: 8px;
 }
 
 #answers > div, 
@@ -235,6 +234,12 @@ body {
   .summary-item > .answer {
     margin-bottom: 14px;
   }
+
+  /*
+  #question-area > div#drop-zone > div {
+    display: none;
+  }
+  */
 
   #question,
   .summary-item > .question {
