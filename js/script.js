@@ -430,7 +430,6 @@ $(document).ready( function(){
     if("ontouchstart" in document.documentElement){
       // instructions for mobile/tablet touchscreen device
       $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
-      $instructions.removeClass('hidden');
 
       // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
       $answers.addClass( 'hidden' );
@@ -438,7 +437,6 @@ $(document).ready( function(){
     } else {
       // instructions for desktop mouse-pointer device
       $instructions.html("<b><i>Drag</i></b> the corresponding team member of the description above onto the blank face...");
-      $instructions.removeClass('hidden');
 
       // hide clickable answers for Mobile/Tablet, show draggable answers for Desktop view 
       $answersTouchScreen.addClass( 'hidden' );
@@ -450,6 +448,10 @@ $(document).ready( function(){
     // empty summary and hide it
     $summaryArea.empty();
     $summaryArea.addClass('hidden');
+
+    // empty instructions
+    $instructions.empty();
+    $instructions.removeClass('hidden');
 
     // make sure user is at top of page
     $('html, body').scrollTop(0);
