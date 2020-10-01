@@ -122,7 +122,6 @@ $(document).ready( function(){
     $replayBtn.addClass('ui-button ui-widget ui-corner-all');
     $replayBtn.text('Replay quiz');
     $replayBtn.on( 'click', function(){
-      //$(this).remove();
       $summaryArea.empty();    
       setUpQuiz();      
     });
