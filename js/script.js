@@ -130,7 +130,8 @@ $(document).ready( function(){
   function showSummary(){
     // hide questions
     $questionArea.addClass('hidden');
-    $instructions.addClass('hidden');
+    //$instructions.addClass('hidden');
+    $instructions.empty();
     $answers.addClass('hidden') // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
     $answersTouchScreen.addClass('hidden'); // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
 
@@ -445,13 +446,15 @@ $(document).ready( function(){
   }
 
   function setUpQuiz(){
+    console.log('0. setUpQuiz')
+
     // empty summary and hide it
     $summaryArea.empty();
     $summaryArea.addClass('hidden');
 
     // empty instructions
-    $instructions.empty();
-    $instructions.removeClass('hidden');
+    //$instructions.empty();
+    //$instructions.removeClass('hidden');
 
     // make sure user is at top of page
     $('html, body').scrollTop(0);
