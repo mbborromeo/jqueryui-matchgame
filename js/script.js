@@ -456,8 +456,8 @@ $(document).ready( function(){
     console.log('setUpQuiz - emptied summaryArea')
 
     // make sure user is at top of page
-    $('html, body').scrollTop(0);
-    console.log('setUpQuiz - scrollTop of page')
+    // $('html, body').scrollTop(0);
+    // console.log('setUpQuiz - scrollTop of page')
 
     // generate question and drop zone area
     questionsToAsk = arrangeQuestions();
