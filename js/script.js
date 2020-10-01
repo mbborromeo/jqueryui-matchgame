@@ -26,7 +26,7 @@ $(document).ready( function(){
 
   function arrangeQuestions(){
     // generate a random set of questions
-    let questionsList = originalData.slice(); // IE 11 doesn't like syntax [...data]
+    const questionsList = originalData.slice(); // IE 11 doesn't like syntax [...data]
     randomize( questionsList );
     return questionsList;
   }
@@ -40,7 +40,7 @@ $(document).ready( function(){
     $column1.append( $column1Heading );
 
     const $column1List = $("<ul></ul>");
-    for( let p=0; p < question.priorities.length; p++ ){
+    for( var p=0; p < question.priorities.length; p++ ){
       const $listItem = $("<li></li>");
       $listItem.text( question.priorities[p] );
       $column1List.append( $listItem );
@@ -59,7 +59,7 @@ $(document).ready( function(){
     $column2.append( $column2Heading );
 
     const $column2List = $("<ul></ul>");
-    for( let c=0; c < question.concernsAndChallenges.length; c++ ){
+    for( var c=0; c < question.concernsAndChallenges.length; c++ ){
       const $listItem = $("<li></li>");
       $listItem.text( question.concernsAndChallenges[c] );
       $column2List.append( $listItem );
@@ -74,7 +74,7 @@ $(document).ready( function(){
     $summaryArea.empty();
     $summaryArea.addClass('hidden');
 
-    for( let q=0; q < questionsToAsk.length; q++ ){
+    for( var q=0; q < questionsToAsk.length; q++ ){
       const question = questionsToAsk[q];
 
       // build answer area
@@ -141,7 +141,7 @@ $(document).ready( function(){
   }
 
   function generateQuestionContent( question ){
-    let $questionDiv = $("<div></div>");
+    var $questionDiv = $("<div></div>");
     $questionDiv.attr('id', 'question');
 
     // build column 1 of question
@@ -165,8 +165,8 @@ $(document).ready( function(){
         return draggable.attr( 'id' ) == $( this ).data( 'id' );
       },
       drop: function( event, ui ){
-        let $member = ui.draggable.data( 'member' );
-        let $image = ui.draggable.data( 'image' );
+        var $member = ui.draggable.data( 'member' );
+        var $image = ui.draggable.data( 'image' );
         $( this ).find("#member").text( $member );
         $( this ).find("#image img").attr( 'src', $image );
 
@@ -176,7 +176,7 @@ $(document).ready( function(){
         });
 
         // hide corresponding answer on Mobile view as well
-        let $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
+        var $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
         $correctAnswerOnMobile.remove();      
 
         if( questionsToAsk.length > 0 ){
@@ -248,7 +248,7 @@ $(document).ready( function(){
     $questionArea.removeClass('hidden');
 
     // remove last item from questions array and return item
-    let question = questionsToAsk.pop();
+    const question = questionsToAsk.pop();
   
     // extract question data from JSON object  
     if( question ){          
@@ -269,17 +269,17 @@ $(document).ready( function(){
     $answers.empty();
     $answers.removeClass('hidden');
 
-    for( let i = 0; i < originalData.length; i++ ){
-      let $answer = $("<div></div>");
+    for( var i = 0; i < originalData.length; i++ ){
+      var $answer = $("<div></div>");
       $answer.attr( 'id', originalData[ i ].id );
       $answer.data( 'member', originalData[ i ].teamMember );
       $answer.data( 'image', originalData[ i ].image );
 
-      let $heading = $("<h3></h3>");
+      var $heading = $("<h3></h3>");
       $heading.text( originalData[ i ].teamMember );
 
-      let $imgWrapper = $("<div></div>");
-      let $img = $("<img />");
+      var $imgWrapper = $("<div></div>");
+      var $img = $("<img />");
       $img.attr('src', originalData[ i ].image );
 
       $imgWrapper.append( $img );
@@ -301,17 +301,17 @@ $(document).ready( function(){
     $answersTouchScreen.empty();
     $answersTouchScreen.removeClass('hidden');
 
-    for( let i = 0; i < originalData.length; i++ ){
-      let $answer = $("<div></div>");
+    for( var i = 0; i < originalData.length; i++ ){
+      var $answer = $("<div></div>");
       $answer.attr( 'id', originalData[ i ].id );
       $answer.data( 'member', originalData[ i ].teamMember );
       $answer.data( 'image', originalData[ i ].image );
   
-      let $heading = $("<h3></h3>");
+      var $heading = $("<h3></h3>");
       $heading.text( originalData[ i ].teamMember );
   
-      let $imgWrapper = $("<div></div>");
-      let $img = $("<img />");
+      var $imgWrapper = $("<div></div>");
+      var $img = $("<img />");
       $img.attr('src', originalData[ i ].image );
   
       $imgWrapper.append( $img );
@@ -331,7 +331,7 @@ $(document).ready( function(){
           });
           
           // also remove selected card in Desktop view
-          let $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
+          var $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
           $correctAnswerOnDesktopView.remove();
   
           // populate image and member name in Mobile view placeholder 
@@ -432,10 +432,10 @@ $(document).ready( function(){
     console.log('enableDesktopOrMobileAnswers')
 
     if("ontouchstart" in document.documentElement){
-      // instructions for mobile/tablet touchscreen device
+      // instructions for mobile/tabvar touchscreen device
       $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
 
-      // hide draggable answers for Desktop, show clickable answers for Mobile/Tablet view
+      // hide draggable answers for Desktop, show clickable answers for Mobile/Tabvar view
       $answers.addClass( 'hidden' );
       $answersTouchScreen.removeClass( 'hidden' );
     } else {
@@ -456,8 +456,8 @@ $(document).ready( function(){
     console.log('setUpQuiz - emptied summaryArea')
 
     // make sure user is at top of page
-    // $('html, body').scrollTop(0);
-    // console.log('setUpQuiz - scrollTop of page')
+    $('html, body').scrollTop(0);
+    console.log('setUpQuiz - scrollTop of page')
 
     // generate question and drop zone area
     questionsToAsk = arrangeQuestions();
