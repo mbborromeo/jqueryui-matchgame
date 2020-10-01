@@ -122,6 +122,7 @@ $(document).ready( function(){
     $replayBtn.addClass('ui-button ui-widget ui-corner-all');
     $replayBtn.text('Replay quiz');
     $replayBtn.on( 'click', function(){
+      $summaryArea.empty();    
       setUpQuiz();
     });
     $summaryArea.append( $replayBtn );
@@ -428,6 +429,8 @@ $(document).ready( function(){
   // Determines if device is a touch-screen without relying on screen width.
   // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
   function enableDesktopOrMobileAnswers(){
+    console.log('enableDesktopOrMobileAnswers')
+
     if("ontouchstart" in document.documentElement){
       // instructions for mobile/tablet touchscreen device
       $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
@@ -449,13 +452,12 @@ $(document).ready( function(){
     console.log('setUpQuiz')
 
     // empty summary and hide it
-    $summaryArea.empty();
     $summaryArea.addClass('hidden');
     console.log('setUpQuiz - emptied summaryArea')
 
     // make sure user is at top of page
-    $('html, body').scrollTop(0);
-    console.log('setUpQuiz - scrollTop of page')
+    // $('html, body').scrollTop(0);
+    // console.log('setUpQuiz - scrollTop of page')
 
     // generate question and drop zone area
     questionsToAsk = arrangeQuestions();
