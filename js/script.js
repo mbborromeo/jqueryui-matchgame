@@ -40,7 +40,7 @@ $(document).ready( function(){
     $column1.append( $column1Heading );
 
     const $column1List = $("<ul></ul>");
-    for( var p=0; p < question.priorities.length; p++ ){
+    for( let p=0; p < question.priorities.length; p++ ){
       const $listItem = $("<li></li>");
       $listItem.text( question.priorities[p] );
       $column1List.append( $listItem );
@@ -59,7 +59,7 @@ $(document).ready( function(){
     $column2.append( $column2Heading );
 
     const $column2List = $("<ul></ul>");
-    for( var c=0; c < question.concernsAndChallenges.length; c++ ){
+    for( let c=0; c < question.concernsAndChallenges.length; c++ ){
       const $listItem = $("<li></li>");
       $listItem.text( question.concernsAndChallenges[c] );
       $column2List.append( $listItem );
@@ -74,7 +74,7 @@ $(document).ready( function(){
     $summaryArea.empty();
     $summaryArea.addClass('hidden');
 
-    for( var q=0; q < questionsToAsk.length; q++ ){
+    for( let q=0; q < questionsToAsk.length; q++ ){
       const question = questionsToAsk[q];
 
       // build answer area
@@ -122,7 +122,7 @@ $(document).ready( function(){
     $replayBtn.addClass('ui-button ui-widget ui-corner-all');
     $replayBtn.text('Replay quiz');
     $replayBtn.on( 'click', function(){
-      $(this).remove();
+      //$(this).remove();
       $summaryArea.empty();    
       setUpQuiz();      
     });
@@ -142,7 +142,7 @@ $(document).ready( function(){
   }
 
   function generateQuestionContent( question ){
-    var $questionDiv = $("<div></div>");
+    const $questionDiv = $("<div></div>");
     $questionDiv.attr('id', 'question');
 
     // build column 1 of question
@@ -166,8 +166,8 @@ $(document).ready( function(){
         return draggable.attr( 'id' ) == $( this ).data( 'id' );
       },
       drop: function( event, ui ){
-        var $member = ui.draggable.data( 'member' );
-        var $image = ui.draggable.data( 'image' );
+        const $member = ui.draggable.data( 'member' );
+        const $image = ui.draggable.data( 'image' );
         $( this ).find("#member").text( $member );
         $( this ).find("#image img").attr( 'src', $image );
 
@@ -177,7 +177,7 @@ $(document).ready( function(){
         });
 
         // hide corresponding answer on Mobile view as well
-        var $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
+        const $correctAnswerOnMobile = $answersTouchScreen.children( "#" + ui.draggable.attr('id') );
         $correctAnswerOnMobile.remove();      
 
         if( questionsToAsk.length > 0 ){
@@ -270,17 +270,17 @@ $(document).ready( function(){
     $answers.empty();
     $answers.removeClass('hidden');
 
-    for( var i = 0; i < originalData.length; i++ ){
-      var $answer = $("<div></div>");
+    for( let i = 0; i < originalData.length; i++ ){
+      const $answer = $("<div></div>");
       $answer.attr( 'id', originalData[ i ].id );
       $answer.data( 'member', originalData[ i ].teamMember );
       $answer.data( 'image', originalData[ i ].image );
 
-      var $heading = $("<h3></h3>");
+      const $heading = $("<h3></h3>");
       $heading.text( originalData[ i ].teamMember );
 
-      var $imgWrapper = $("<div></div>");
-      var $img = $("<img />");
+      const $imgWrapper = $("<div></div>");
+      const $img = $("<img />");
       $img.attr('src', originalData[ i ].image );
 
       $imgWrapper.append( $img );
@@ -302,17 +302,17 @@ $(document).ready( function(){
     $answersTouchScreen.empty();
     $answersTouchScreen.removeClass('hidden');
 
-    for( var i = 0; i < originalData.length; i++ ){
-      var $answer = $("<div></div>");
+    for( let i = 0; i < originalData.length; i++ ){
+      const $answer = $("<div></div>");
       $answer.attr( 'id', originalData[ i ].id );
       $answer.data( 'member', originalData[ i ].teamMember );
       $answer.data( 'image', originalData[ i ].image );
   
-      var $heading = $("<h3></h3>");
+      const $heading = $("<h3></h3>");
       $heading.text( originalData[ i ].teamMember );
   
-      var $imgWrapper = $("<div></div>");
-      var $img = $("<img />");
+      const $imgWrapper = $("<div></div>");
+      const $img = $("<img />");
       $img.attr('src', originalData[ i ].image );
   
       $imgWrapper.append( $img );
@@ -332,7 +332,7 @@ $(document).ready( function(){
           });
           
           // also remove selected card in Desktop view
-          var $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
+          const $correctAnswerOnDesktopView = $answers.children( "#" + $answerID );
           $correctAnswerOnDesktopView.remove();
   
           // populate image and member name in Mobile view placeholder 
@@ -430,8 +430,6 @@ $(document).ready( function(){
   // Determines if device is a touch-screen without relying on screen width.
   // Note: if you switch between touch-screen and mouse-pointer devices on an emulator, you need to refresh after doing so.
   function enableDesktopOrMobileAnswers(){
-    console.log('enableDesktopOrMobileAnswers')
-
     if("ontouchstart" in document.documentElement){
       // instructions for mobile/tabvar touchscreen device
       $instructions.html("<b><i>Click</i></b> on the team member below that matches the description above...");
@@ -450,27 +448,20 @@ $(document).ready( function(){
   }
 
   function setUpQuiz(){
-    console.log('setUpQuiz')
-
     // empty summary and hide it
     $summaryArea.addClass('hidden');
-    console.log('setUpQuiz - emptied summaryArea')
 
     // make sure user is at top of page
     $('html, body').scrollTop(0);
-    console.log('setUpQuiz - scrollTop of page')
 
     // generate question and drop zone area
     questionsToAsk = arrangeQuestions();
-    console.log('setUpQuiz - arrangeQuestions')
 
     // generate Q & A summary, but it is initially hidden from view
     generateSummary();
-    console.log('setUpQuiz - generateSummary')
 
     // choose a question to ask user
     askNextQuestion();
-    console.log('setUpQuiz - askNextQuestion')
 
     // generate both draggable and clickable answers once
     generateDesktopAnswers();
@@ -479,8 +470,7 @@ $(document).ready( function(){
     // initial screen width check to determine whether to show draggable or clickable answers
     enableDesktopOrMobileAnswers();
 
-    // empty instructions
-    //$instructions.empty();
+    // show instructions on setup
     $instructions.removeClass('hidden');
   }
 
