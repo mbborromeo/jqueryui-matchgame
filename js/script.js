@@ -130,7 +130,7 @@ $(document).ready( function(){
   function showSummary(){
     // hide questions
     $questionArea.addClass('hidden');
-    //$instructions.addClass('hidden');
+    $instructions.addClass('hidden');
     $instructions.empty();
     $answers.addClass('hidden') // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
     $answersTouchScreen.addClass('hidden'); // override CSS logic from enableDesktopOrMobileAnswers() - css({ "display": "none" })
@@ -446,27 +446,28 @@ $(document).ready( function(){
   }
 
   function setUpQuiz(){
-    console.log('0. setUpQuiz')
+    console.log('setUpQuiz')
 
     // empty summary and hide it
     $summaryArea.empty();
     $summaryArea.addClass('hidden');
-
-    // empty instructions
-    //$instructions.empty();
-    //$instructions.removeClass('hidden');
+    console.log('setUpQuiz - emptied summaryArea')
 
     // make sure user is at top of page
     $('html, body').scrollTop(0);
+    console.log('setUpQuiz - scrollTop of page')
 
     // generate question and drop zone area
     questionsToAsk = arrangeQuestions();
+    console.log('setUpQuiz - arrangeQuestions')
 
     // generate Q & A summary, but it is initially hidden from view
     generateSummary();
+    console.log('setUpQuiz - generateSummary')
 
     // choose a question to ask user
     askNextQuestion();
+    console.log('setUpQuiz - askNextQuestion')
 
     // generate both draggable and clickable answers once
     generateDesktopAnswers();
@@ -474,6 +475,10 @@ $(document).ready( function(){
     
     // initial screen width check to determine whether to show draggable or clickable answers
     enableDesktopOrMobileAnswers();
+
+    // empty instructions
+    //$instructions.empty();
+    $instructions.removeClass('hidden');
   }
 
 
