@@ -184,8 +184,8 @@ body {
 
 #replay-btn {
   width: 100%;
-  margin-top: 10px;
-  padding: 10px 0;
+  margin: 10px 0 20px;
+  padding: 15px 0;
 }
 
 /* Dialog box customisation */
